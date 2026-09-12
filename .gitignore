@@ -31,3 +31,6 @@ outputs/
 .DS_Store
 Thumbs.db
 *.log
+
+# Local Vercel project metadata
+.vercel/
