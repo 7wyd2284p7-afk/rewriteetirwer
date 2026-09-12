@@ -1,0 +1,33 @@
+# Local development helpers and caches
+.npm-cache/
+node_modules/
+.vercel/
+serve.mjs
+打开回译室.cmd
+package.json
+README.md
+
+# Working/output folders and common non-site artifacts
+work/
+outputs/
+*.xls
+*.xlsx
+*.xlsm
+*.doc
+*.docx
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# Secrets and local environment files
+.env
+.env.*
+*.pem
+*.key
+
+# OS/editor caches
+.DS_Store
+Thumbs.db
+*.log

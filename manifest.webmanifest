@@ -1,0 +1,10 @@
+{
+  "name": "回译室 · 新概念英语回译练习",
+  "short_name": "回译室",
+  "description": "新概念英语电脑回译练习",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f1e8",
+  "theme_color": "#173f35",
+  "lang": "zh-CN"
+}
