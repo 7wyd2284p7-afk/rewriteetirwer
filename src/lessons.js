@@ -47,4 +47,64 @@ window.RETRANSLATE_LESSONS = [
     original:
       "I have just received a letter from my brother, Tim. He is in Australia. He has been there for six months. Tim is an engineer. He is working for a big firm and he has already visited a great number of different places in Australia. He has just bought an Australian car and has gone to Alice Springs, a small town in the centre of Australia. He will soon visit Darwin. From there, he will fly to Perth. My brother has never been abroad before, so he is finding this trip very exciting.",
   },
+  {
+    id: "nce2-005",
+    book: "新概念英语 2",
+    number: 5,
+    total: 96,
+    title: "No Wrong Numbers",
+    titleCn: "无错号之虞",
+    chinese:
+      "詹姆斯·斯科特先生在锡尔伯里有一个汽车修理部，现在他刚在平赫斯特买了另一个汽车修理部。平赫斯特离锡尔伯里只有5英里，但詹姆斯·斯科特先生未能为他新的汽车修理部搞到一部电话机，所以他买了12只鸽子。昨天，一只鸽子把第一封信从平赫斯特带到锡尔伯里。这只鸟只用了3分钟就飞完了全程。到目前为止，斯科特先生从一个汽车修理部向另一个发送了大量索取备件的信件和其他紧急函件。就这样，他开始了自己的私人“电话”业务。",
+    original:
+      "Mr. James Scott has a garage in Silbury and now he has just bought another garage in Pinhurst. Pinhurst is only five miles from Silbury, but Mr. Scott cannot get a telephone for his new garage, so he has just bought twelve pigeons. Yesterday, a pigeon carried the first message from Pinhurst to Silbury. The bird covered the distance in three minutes. Up to now, Mr. Scott has sent a great many requests for spare parts and other urgent messages from one garage to the other. In this way, he has begun his own private 'telephone' service.",
+  },
+  {
+    id: "nce2-006",
+    book: "新概念英语 2",
+    number: 6,
+    total: 96,
+    title: "Percy Buttons",
+    titleCn: "珀西·巴顿斯",
+    chinese:
+      "我刚刚搬进了大桥街的一所房子。昨天一个乞丐来敲我的门，问我要一顿饭和一杯啤酒。作为回报，那乞丐头顶地倒立起来，嘴里还唱着歌。我给了他一顿饭。他把食物吃完，又喝了酒。然后把一块乳酪装进衣袋里走了。后来，一位邻居告诉我他的情况。大家都认识他，他叫珀西·巴顿斯。他每月对这条街上的每户人家光顾一次，总是请求给他一顿饭和一杯啤酒。",
+    original:
+      "I have just moved to a house in Bridge Street. Yesterday a beggar knocked at my door. He asked me for a meal and a glass of beer. In return for this, the beggar stood on his head and sang songs. I gave him a meal. He ate the food and drank the beer. Then he put a piece of cheese in his pocket and went away. Later a neighbour told me about him. Everybody knows him. His name is Percy Buttons. He calls at every house in the street once a month and always asks for a meal and a glass of beer.",
+  },
+  {
+    id: "nce2-007",
+    book: "新概念英语 2",
+    number: 7,
+    total: 96,
+    title: "Too late",
+    titleCn: "为时太晚",
+    chinese:
+      "飞机误点了，侦探们在机场等了整整一上午。他们正期待从南非来的一个装着钻石的贵重包裹。数小时以前，有人向警方报告，说有人企图偷走这些钻石。当飞机到达时，一些侦探等候在主楼内，另一些侦探则守候在停机坪上。有两个人把包裹拿下飞机，进了海关。这时两个侦探把住门口，另外两个侦探打开了包裹。令他们吃惊的是，那珍贵的包裹里面装的全是石头和沙子！",
+    original:
+      "The plane was late and detectives were waiting at the airport all morning. They were expecting a valuable parcel of diamonds from South Africa. A few hours earlier, someone had told the police that thieves would try to steal the diamonds. When the plane arrived, some of the detectives were waiting inside the main building while others were waiting on the airfield. Two men took the parcel off the plane and carried it into the Customs House. While two detectives were keeping guard at the door, two others opened the parcel. To their surprise, the precious parcel was full of stones and sand!",
+  },
+  {
+    id: "nce2-008",
+    book: "新概念英语 2",
+    number: 8,
+    total: 96,
+    title: "The best and the worst",
+    titleCn: "最好的和最差的",
+    chinese:
+      "乔·桑德斯拥有我们镇上最漂亮的花园。几乎每个人都参加每年举办的“最佳花园竞赛”，而每次都是乔获胜。比尔·弗里思的花园比乔的花园大，他比乔也更为勤奋，种植的花卉和蔬菜也更多，但乔的花园更富有情趣。他修筑了一条条整洁的小路，并在一个池塘上架了一座小木桥。我也喜欢花园，但我却不愿意辛勤劳动。每年的花园竞赛我也参加，但总因是镇上最差的花园而获得一个小奖！",
+    original:
+      "Joe Sanders has the most beautiful garden in our town. Nearly everybody enters for ‘The Nicest Garden Competition’ each year, but Joe wins every time. Bill Frith’s garden is larger than Joe’s. Bill works harder than Joe and grows more flowers and vegetables, but Joe’s garden is more interesting. He has made neat paths and has built a wooden bridge over a pool. I like gardens too, but I do not like hard work. Every year I enter for the garden competition too, and I always win a little prize for the worst garden in the town!",
+  },
+  {
+    id: "nce2-009",
+    book: "新概念英语 2",
+    number: 9,
+    total: 96,
+    title: "A cold welcome",
+    titleCn: "冷遇",
+    chinese:
+      "星期三的晚上，我们去了市政厅。那是一年的最后一天，一大群人聚集在市政厅的大钟下面。再过20分钟，大钟将敲响12下。15分钟过去了，而就在11点55分时，大钟停了。那根巨大的分针不动了。我们等啊等啊，可情况没有变化。突然有人喊道：“已经12点零2分了！那钟已经停了！”我看了一下我的手表，果真如此。那座大钟不愿意迎接新年。此时，大家笑了起来，同时唱起了歌。",
+    original:
+      "On Wednesday evening, we went to the Town Hall. It was the last day of the year and a large crowd of people had gathered under the Town Hall clock. It would strike twelve in twenty minutes’ time. Fifteen minutes passed and then, at five to twelve, the clock stopped. The big minute hand did not move. We waited and waited, but nothing happened. Suddenly someone shouted, ‘It’s two minutes past twelve! The clock has stopped!’ I looked at my watch. It was true. The big clock refused to welcome the New Year. At that moment, everybody began to laugh and sing.",
+  },
 ];
