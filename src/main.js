@@ -34,16 +34,8 @@ function escapeHTML(value) {
   return value.replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
 }
 
-function withBreaks(value) {
-  return escapeHTML(value).replace(/\n/g, "<br>");
-}
-
 function renderChinese(value) {
   return value.split(/\n+/).map((paragraph) => `<p>${escapeHTML(paragraph)}</p>`).join("");
-}
-
-function renderOriginal(value) {
-  return value.split(/\r?\n/).map((paragraph) => `<p>${escapeHTML(paragraph)}</p>`).join("");
 }
 
 function formatDuration(seconds) {
@@ -56,54 +48,275 @@ function wordCount() {
   return state.draft.trim().match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g)?.length || 0;
 }
 
-function compareTexts(userText, originalText) {
-  const userChars = Array.from(userText.replace(/\r\n/g, "\n"));
-  const originalChars = Array.from(originalText.replace(/\r\n/g, "\n"));
-  const rows = userChars.length + 1;
-  const cols = originalChars.length + 1;
-  const dp = Array.from({ length: rows }, () => new Uint16Array(cols));
-  for (let i = 1; i < rows; i += 1) {
-    for (let j = 1; j < cols; j += 1) {
-      dp[i][j] = userChars[i - 1] === originalChars[j - 1]
-        ? dp[i - 1][j - 1] + 1
-        : Math.max(dp[i - 1][j], dp[i][j - 1]);
+function tokenizeForComparison(text) {
+  const tokens = [];
+  const normalized = text.replace(/\r\n/g, "\n");
+  const chars = Array.from(normalized);
+  let word = "";
+  const flushWord = () => {
+    if (!word) return;
+    tokens.push({ type: "word", value: word });
+    word = "";
+  };
+  chars.forEach((char, index) => {
+    const nextIsLetterOrNumber = /[A-Za-z0-9]/.test(chars[index + 1] || "");
+    if (/[A-Za-z0-9]/.test(char)) {
+      word += char;
+      return;
     }
-  }
-  const matchedUser = new Set();
-  const matchedOriginal = new Set();
-  let i = userChars.length;
-  let j = originalChars.length;
-  while (i > 0 && j > 0) {
-    if (userChars[i - 1] === originalChars[j - 1]) {
-      matchedUser.add(i - 1); matchedOriginal.add(j - 1); i -= 1; j -= 1;
-    } else if (dp[i - 1][j] >= dp[i][j - 1]) {
-      i -= 1;
-    } else {
-      j -= 1;
+    if ((char === "-" || char === "'" || char === "’") && word && nextIsLetterOrNumber) {
+      word += char;
+      return;
     }
-  }
-  let highlighted = "";
-  userChars.forEach((char, index) => {
-    if (char === "\n") {
-      highlighted += matchedUser.has(index) ? "<br>" : `<mark class="diff-wrong diff-newline" title="换行与原文不一致">↵</mark><br>`;
-    } else if (char === " ") {
-      highlighted += matchedUser.has(index) ? " " : `<mark class="diff-wrong diff-space" title="空格与原文不一致"> </mark>`;
+    flushWord();
+    if (char === " ") {
+      tokens.push({ type: "space", value: char });
+    } else if (char === "?" || char === "!" || char === "-") {
+      tokens.push({ type: "mark", value: char });
     } else {
-      highlighted += matchedUser.has(index)
-        ? escapeHTML(char)
-        : `<mark class="diff-wrong" title="字符与原文不一致">${escapeHTML(char)}</mark>`;
+      tokens.push({ type: "ignored", value: char });
     }
   });
-  const missingChars = originalChars.filter((_, index) => !matchedOriginal.has(index));
-  const matches = matchedUser.size;
-  const denominator = userChars.length + originalChars.length;
-  const accuracy = denominator ? Math.round((2 * matches / denominator) * 100) : 100;
+  flushWord();
+  let wordIndex = 0;
+  return tokens.map((token, index) => ({
+    ...token,
+    index,
+    wordIndex: token.type === "word" ? wordIndex++ : null,
+  }));
+}
+
+function wordLetters(token) {
+  return token.value.replace(/['’-]/g, "");
+}
+
+function hyphenPositions(token) {
+  const positions = [];
+  let letters = 0;
+  Array.from(token.value).forEach((char) => {
+    if (/[A-Za-z0-9]/.test(char)) letters += 1;
+    else if (char === "-") positions.push(letters);
+  });
+  return positions.join(",");
+}
+
+function renderComparedTokens(tokens, markedUser, originalKinds, side) {
+  return tokens.map((token) => {
+    if (token.value === "\n") return "<br>";
+    if (token.type === "space") return " ";
+    const value = escapeHTML(token.value);
+    if (side === "original") {
+      const kind = originalKinds.get(token.index);
+      if (kind === "word") return `<span class="diff-reference" title="与回译不一致">${value}</span>`;
+      if (kind === "format") return `<span class="diff-format-reference" title="格式与回译不一致">${value}</span>`;
+      if (kind === "both") return `<span class="diff-reference diff-format-reference" title="单词和格式均与回译不一致">${value}</span>`;
+      return value;
+    }
+    if (!markedUser.has(token.index)) return value;
+    return `<mark class="diff-wrong" title="与原文不一致">${value}</mark>`;
+  }).join("");
+}
+
+function alignWords(userWords, originalWords) {
+  const rows = userWords.length + 1;
+  const cols = originalWords.length + 1;
+  const dp = Array.from({ length: rows }, () => Array(cols).fill(Infinity));
+  const previous = Array.from({ length: rows }, () => Array(cols).fill(null));
+  dp[0][0] = 0;
+  const relax = (fromI, fromJ, toI, toJ, cost, operation) => {
+    const next = dp[fromI][fromJ] + cost;
+    if (next < dp[toI][toJ]) {
+      dp[toI][toJ] = next;
+      previous[toI][toJ] = { i: fromI, j: fromJ, operation };
+    }
+  };
+  for (let i = 0; i < rows; i += 1) {
+    for (let j = 0; j < cols; j += 1) {
+      if (!Number.isFinite(dp[i][j])) continue;
+      if (i < userWords.length && j < originalWords.length) {
+        const same = wordLetters(userWords[i]) === wordLetters(originalWords[j]);
+        relax(i, j, i + 1, j + 1, same ? 0 : 1, {
+          type: same ? "equal" : "replace",
+          userWords: [userWords[i]],
+          originalWords: [originalWords[j]],
+        });
+      }
+      if (i < userWords.length) {
+        for (let count = 2; count <= 6 && j + count <= originalWords.length; count += 1) {
+          const originals = originalWords.slice(j, j + count);
+          if (wordLetters(userWords[i]) === originals.map(wordLetters).join("")) {
+            relax(i, j, i + 1, j + count, 0, { type: "joined", userWords: [userWords[i]], originalWords: originals });
+          }
+        }
+      }
+      if (j < originalWords.length) {
+        for (let count = 2; count <= 6 && i + count <= userWords.length; count += 1) {
+          const users = userWords.slice(i, i + count);
+          if (users.map(wordLetters).join("") === wordLetters(originalWords[j])) {
+            relax(i, j, i + count, j + 1, 0, { type: "split", userWords: users, originalWords: [originalWords[j]] });
+          }
+        }
+      }
+      if (j < originalWords.length) {
+        relax(i, j, i, j + 1, 1, { type: "missing", userWords: [], originalWords: [originalWords[j]] });
+      }
+      if (i < userWords.length) {
+        relax(i, j, i + 1, j, 1, { type: "extra", userWords: [userWords[i]], originalWords: [] });
+      }
+    }
+  }
+  const operations = [];
+  let i = userWords.length;
+  let j = originalWords.length;
+  while (i > 0 || j > 0) {
+    const step = previous[i][j];
+    if (!step) throw new Error("无法完成单词对齐");
+    operations.push(step.operation);
+    i = step.i;
+    j = step.j;
+  }
+  return operations.reverse();
+}
+
+function gapTokens(tokens, leftWord, rightWord) {
+  const start = leftWord ? leftWord.index + 1 : 0;
+  const end = rightWord ? rightWord.index : tokens.length;
+  return tokens.slice(start, end);
+}
+
+function logicalSpaceCount(tokens) {
+  if (tokens.some((token) => token.value === "\n")) return 1;
+  return tokens.filter((token) => token.type === "space").length;
+}
+
+function hasSpaceIssue(tokens) {
+  const lastNewline = tokens.map((token) => token.value).lastIndexOf("\n");
+  if (lastNewline >= 0) {
+    const lineStart = tokens.slice(lastNewline + 1);
+    const quoteIndex = lineStart.findLastIndex((token) => token.type === "ignored" && /['‘“"]/.test(token.value));
+    return quoteIndex >= 0 && lineStart.slice(quoteIndex + 1).some((token) => token.type === "space");
+  }
+  return logicalSpaceCount(tokens) !== 1;
+}
+
+function compareFormatMarks(userGap, originalGap, setOriginalKind) {
+  const userMarks = userGap.filter((token) => token.type === "mark" && token.value !== "-");
+  const originalMarks = originalGap.filter((token) => token.type === "mark" && token.value !== "-");
+  const rows = userMarks.length + 1;
+  const cols = originalMarks.length + 1;
+  const dp = Array.from({ length: rows }, () => new Uint16Array(cols));
+  for (let i = 0; i < rows; i += 1) dp[i][0] = i;
+  for (let j = 0; j < cols; j += 1) dp[0][j] = j;
+  for (let i = 1; i < rows; i += 1) {
+    for (let j = 1; j < cols; j += 1) {
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + (userMarks[i - 1].value === originalMarks[j - 1].value ? 0 : 1),
+      );
+    }
+  }
+  let i = userMarks.length;
+  let j = originalMarks.length;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && userMarks[i - 1].value === originalMarks[j - 1].value && dp[i][j] === dp[i - 1][j - 1]) {
+      i -= 1;
+      j -= 1;
+    } else if (i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + 1) {
+      setOriginalKind(originalMarks[j - 1], "format");
+      i -= 1;
+      j -= 1;
+    } else if (j > 0 && dp[i][j] === dp[i][j - 1] + 1) {
+      setOriginalKind(originalMarks[j - 1], "format");
+      j -= 1;
+    } else {
+      i -= 1;
+    }
+  }
+  return dp[userMarks.length][originalMarks.length];
+}
+
+function compareTexts(userText, originalText) {
+  const userTokens = tokenizeForComparison(userText);
+  const originalTokens = tokenizeForComparison(originalText);
+  const userWords = userTokens.filter((token) => token.type === "word");
+  const originalWords = originalTokens.filter((token) => token.type === "word");
+  const operations = alignWords(userWords, originalWords);
+  const markedUser = new Set();
+  const originalKinds = new Map();
+  const setOriginalKind = (token, kind) => {
+    if (!token) return;
+    const current = originalKinds.get(token.index);
+    if (!current) originalKinds.set(token.index, kind);
+    else if (current !== kind) originalKinds.set(token.index, "both");
+  };
+  let wrongWords = 0;
+  let missingWords = 0;
+  let extraWords = 0;
+  let formatErrors = 0;
+  const userToOriginal = new Map();
+
+  operations.forEach((operation) => {
+    if (operation.type === "replace") {
+      userToOriginal.set(operation.userWords[0].wordIndex, operation.originalWords[0]);
+      markedUser.add(operation.userWords[0].index);
+      setOriginalKind(operation.originalWords[0], "word");
+      wrongWords += 1;
+    } else if (operation.type === "missing") {
+      setOriginalKind(operation.originalWords[0], "word");
+      missingWords += 1;
+    } else if (operation.type === "extra") {
+      markedUser.add(operation.userWords[0].index);
+      extraWords += 1;
+    } else if (operation.type === "joined") {
+      userToOriginal.set(operation.userWords[0].wordIndex, operation.originalWords.at(-1));
+      formatErrors += operation.originalWords.length - 1;
+      operation.originalWords.slice(1).forEach((word) => setOriginalKind(word, "format"));
+    } else if (operation.type === "split") {
+      operation.userWords.forEach((word) => userToOriginal.set(word.wordIndex, operation.originalWords[0]));
+      formatErrors += operation.userWords.length - 1;
+      setOriginalKind(operation.originalWords[0], "format");
+    } else {
+      userToOriginal.set(operation.userWords[0].wordIndex, operation.originalWords[0]);
+      if (hyphenPositions(operation.userWords[0]) !== hyphenPositions(operation.originalWords[0])) {
+        formatErrors += 1;
+        setOriginalKind(operation.originalWords[0], "format");
+      }
+    }
+  });
+
+  for (let index = 1; index < userWords.length; index += 1) {
+    const previousUser = userWords[index - 1];
+    const currentUser = userWords[index];
+    const previousOriginal = userToOriginal.get(previousUser.wordIndex);
+    const currentOriginal = userToOriginal.get(currentUser.wordIndex);
+    if (previousOriginal && currentOriginal && previousOriginal.wordIndex === currentOriginal.wordIndex) continue;
+    if (hasSpaceIssue(gapTokens(userTokens, previousUser, currentUser))) {
+      formatErrors += 1;
+      setOriginalKind(currentOriginal, "format");
+    }
+  }
+
+  operations.filter((operation) => operation.userWords.length && operation.originalWords.length).forEach((operation) => {
+    const userWord = operation.userWords.at(-1);
+    const originalWord = operation.originalWords.at(-1);
+    const userNext = userWords[userWord.wordIndex + 1] || null;
+    const originalNext = originalWords[originalWord.wordIndex + 1] || null;
+    const userGap = gapTokens(userTokens, userWord, userNext);
+    const originalGap = gapTokens(originalTokens, originalWord, originalNext);
+    formatErrors += compareFormatMarks(userGap, originalGap, setOriginalKind);
+  });
+
+  const errors = wrongWords + missingWords + extraWords + formatErrors;
+  const denominator = Math.max(userWords.length, originalWords.length, 1);
   return {
-    highlighted,
-    accuracy,
-    wrongCount: userChars.length - matches,
-    missingCount: missingChars.length,
-    missingChars,
+    highlightedUser: renderComparedTokens(userTokens, markedUser, originalKinds, "user"),
+    highlightedOriginal: renderComparedTokens(originalTokens, markedUser, originalKinds, "original"),
+    accuracy: Math.max(0, Math.round((1 - errors / denominator) * 100)),
+    wrongWords,
+    missingWords,
+    extraWords,
+    formatErrors,
   };
 }
 
@@ -133,8 +346,6 @@ function renderWritingArea() {
     </section>`;
   }
   const comparison = compareTexts(state.draft, state.original);
-  const visibleChar = (char) => char === " " ? "空格" : char === "\n" ? "换行" : char === "\t" ? "制表符" : char;
-  const missingPreview = comparison.missingChars.slice(0, 80).map((char) => `<span>${escapeHTML(visibleChar(char))}</span>`).join("");
   return `<section class="result-stack">
     <div class="completion-strip">
       <div><span>✓</span><strong>本次回译完成</strong></div>
@@ -142,13 +353,12 @@ function renderWritingArea() {
     </div>
     <article class="answer-card user-answer">
       <div class="section-label"><span>02</span> 你的回译</div>
-      <div class="english-copy diff-copy">${comparison.highlighted || "本次没有保存回译内容。"}</div>
-      <div class="comparison-summary"><strong>红色 ${comparison.wrongCount} 字符</strong><span>遗漏 ${comparison.missingCount} 字符</span><em>严格逐字符比对：大小写、空格、换行、引号和标点均计入。</em></div>
-      ${comparison.missingCount ? `<details class="missing-panel"><summary>查看遗漏的原文字符</summary><div>${missingPreview}${comparison.missingCount > 80 ? `<span>另有 ${comparison.missingCount - 80} 字符…</span>` : ""}</div></details>` : ""}
+      <div class="english-copy diff-copy">${comparison.highlightedUser || "本次没有保存回译内容。"}</div>
+      <div class="comparison-summary"><strong>错词 ${comparison.wrongWords}</strong><span>漏词 ${comparison.missingWords}</span><span>多词 ${comparison.extraWords}</span><span>格式错误 ${comparison.formatErrors}</span><em>错词整词标红；原文对应错误加橙色下划线。</em></div>
     </article>
     <article class="answer-card original-answer">
       <div class="section-label"><span>03</span> 英文原文</div>
-      ${state.original ? `<div class="english-copy">${renderOriginal(state.original)}</div>` : `<div class="empty-original">
+      ${state.original ? `<div class="english-copy"><p>${comparison.highlightedOriginal.replace(/<br>/g, "</p><p>")}</p></div>` : `<div class="empty-original">
         <div class="book-mark">Aa</div>
         <div><strong>还没有录入英文原文</strong><p>点击“编辑内容”，粘贴你书中的 Lesson ${lesson.number} 原文。保存后会在这里显示。</p></div>
         <button type="button" id="add-original">现在录入</button>

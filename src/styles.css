@@ -63,15 +63,11 @@ h1 { font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(35px, 6vw, 6
 .original-answer { border-left: 4px solid var(--coral); }
 .original-answer .english-copy p { margin: 0; text-indent: 2em; }
 .diff-wrong { color: #a31319; background: #ffd7d9; border-bottom: 2px solid #dc3f48; border-radius: 2px; padding: 1px 2px; margin: 0 -1px; }
-.diff-space { display: inline-block; min-width: .38em; }
-.diff-newline { font: 600 11px/1 Arial, sans-serif; vertical-align: middle; }
+.diff-reference { color: inherit; background: #fff4d8; text-decoration: underline; text-decoration-color: #e58a00; text-decoration-thickness: 3px; text-underline-offset: 4px; border-radius: 2px; padding: 1px; }
+.diff-format-reference { color: inherit; text-decoration-line: underline; text-decoration-style: dashed; text-decoration-color: #e58a00; text-decoration-thickness: 3px; text-underline-offset: 4px; }
 .comparison-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; border-top: 1px solid #e7e1d7; margin-top: 24px; padding-top: 17px; color: #6e746e; font-size: 12px; }
 .comparison-summary strong { color: #a31319; }
 .comparison-summary em { margin-left: auto; font-style: normal; }
-.missing-panel { margin-top: 15px; color: #626a64; font-size: 13px; }
-.missing-panel summary { cursor: pointer; color: var(--forest); font-weight: 700; }
-.missing-panel > div { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-.missing-panel span { color: #9c1c21; background: #fff0f0; border: 1px solid #f1c4c6; padding: 3px 7px; border-radius: 3px; }
 .empty-original { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; color: #666e68; }
 .empty-original strong { color: var(--ink); }
 .empty-original p { margin: 5px 0 0; font-size: 14px; }

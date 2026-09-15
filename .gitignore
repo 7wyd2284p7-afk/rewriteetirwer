@@ -2,10 +2,6 @@
 .npm-cache/
 node_modules/
 .vercel/
-serve.mjs
-打开回译室.cmd
-package.json
-README.md
 
 # Working/output folders and common non-site artifacts
 work/
