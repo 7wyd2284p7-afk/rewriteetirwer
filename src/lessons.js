@@ -185,4 +185,128 @@ window.RETRANSLATE_LESSONS = [
 “Don’t interrupt,” he said.
 Then he smiled and told me I would receive an extra thousand pounds a year!`,
   },
+  {
+    id: "nce2-016",
+    book: "新概念英语 2",
+    number: 16,
+    total: 96,
+    title: "A polite request",
+    titleCn: "彬彬有礼的要求",
+    chinese:
+      `一旦你把汽车停错了地方，交通警察很快就会发现。如果他没给你罚款单就放你走了，算你走运。然而，情况并不都是这样，交通警察有时也很客气。有一次在瑞典度假，我发现我的车上有这样一个字条：“先生，欢迎您光临我们的城市。此处是‘禁止停车’区。如果您对我们街上的标牌稍加注意，您在此会过得很愉快的。谨此提请注意。”如果你收到这样的恳求，你是不会不遵照执行的！`,
+    original:
+      `If you park your car in the wrong place, a traffic policeman will soon find it. You will be very lucky if he lets you go without a ticket. However, this does not always happen. Traffic police are sometimes very polite. During a holiday in Sweden, I found this note on my car: “Sir, we welcome you to our city. This is a ‘No Parking’ area. You will enjoy your stay here if you pay attention to our street signs. This note is only a reminder.” If you receive a request like this, you cannot fail to obey it!`,
+  },
+  {
+    id: "nce2-017",
+    book: "新概念英语 2",
+    number: 17,
+    total: 96,
+    title: "Always young",
+    titleCn: "青春常驻",
+    chinese:
+      `我的姑姑珍妮弗是位演员，她至少也有35岁了。尽管如此，她却常在舞台上扮演小姑娘。珍妮弗很快又要参加一个新剧的演出。这一次，她将扮演一个17岁的少女。演出时她必须穿一条鲜红色的裙子和黑色的长筒袜。去年在演另一个剧时，她不得不穿短袜和一件鲜艳的橘红色的衣服。一旦有人问起她有多大年纪，她总是回答：“亲爱的，长成大人真可怕啊！”`,
+    original:
+      `My Aunt Jennifer is an actress. She must be at least thirty-five years old. In spite of this, she often appears on the stage as a young girl. Jennifer will have to take part in a new play soon. This time, she will be a girl of seventeen. In the play, she must appear in a bright red dress and long black stockings. Last year in another play, she had to wear short socks and a bright, orange-coloured dress. If anyone ever asks her how old she is, she always answers, “Darling, it must be terrible to be grown up!”`,
+  },
+  {
+    id: "nce2-018",
+    book: "新概念英语 2",
+    number: 18,
+    total: 96,
+    title: "He often does this!",
+    titleCn: "他经常干这种事！",
+    chinese:
+      `我在一家乡村小酒店吃过午饭后，就找我的提包。我曾把它放在门边的椅子上，可这会儿不见了！当我正在寻找时，酒店老板走了进来。
+
+“您吃得好吗？”他问。
+
+“很好，谢谢。”我回答，“但我付不了账，我的提包没有了。”
+
+酒店老板笑了笑，马上走了出去。一会儿工夫他拿着我的提包回来了，把它还给了我。
+
+“实在抱歉，”他说，“我的狗把它弄到花园里去了，他经常干这种事！”`,
+    original:
+      `After I had had lunch at a village pub, I looked for my bag. I had left it on a chair beside the door and now it wasn’t there! As I was looking for it, the landlord came in.
+
+“Did you have a good meal?” he asked.
+
+“Yes, thank you,” I answered, “but I can’t pay the bill. I haven’t got my bag.”
+
+The landlord smiled and immediately went out. In a few minutes he returned with my bag and gave it back to me.
+
+“I’m very sorry,” he said. “My dog had taken it into the garden. He often does this!”`,
+  },
+  {
+    id: "nce2-019",
+    book: "新概念英语 2",
+    number: 19,
+    total: 96,
+    title: "Sold out",
+    titleCn: "票已售完",
+    chinese:
+      `“剧马上就要开演了，”我说。
+
+“也许已经开演了呢，”苏珊回答说。
+
+我匆匆赶到售票处，问：“我可以买两张票吗？”
+
+“对不起，票已售完。”那位姑娘说。
+
+“真可惜！”苏珊大声说。
+
+正在这时，一个男子匆匆奔向售票处。
+
+“我可以退掉这两张票吗？”他问。
+
+“当然可以，”那姑娘说。
+
+我马上又回到售票处。
+
+“我可以买那两张票吗？”我问。
+
+“当然可以，不过这两张票是下星期三的，您是否还要呢？”
+
+“我还是买下的好，”我垂头丧气地说。`,
+    original:
+      `“The play may begin at any moment,” I said.
+
+“It may have begun already,” Susan answered.
+
+I hurried to the ticket office. “May I have two tickets please?” I asked.
+
+“I’m sorry, we’ve sold out,” the girl said.
+
+“What a pity!” Susan exclaimed.
+
+Just then, a man hurried to the ticket office.
+
+“Can I return these two tickets?” he asked.
+
+“Certainly,” the girl said.
+
+I went back to the ticket office at once.
+
+“Could I have those two tickets please?” I asked.
+
+“Certainly,” the girl said, “but they’re for next Wednesday’s performance. Do you still want them?”
+
+“I might as well have them,” I said sadly.`,
+  },
+  {
+    id: "nce2-020",
+    book: "新概念英语 2",
+    number: 20,
+    total: 96,
+    title: "One man in a boat",
+    titleCn: "独坐孤舟",
+    chinese:
+      `钓鱼是我最喜欢的一项运动。我经常一钓数小时却一无所获，但我从不为此烦恼。有些垂钓者就是不走运。他们往往鱼钓不到，却钓上来些旧靴子和垃圾。我的运气甚至还不及他们。我什么东西也未钓到过——就连旧靴子也没有。我总是在河上待上整整一上午，然后空着袋子回家。
+
+“你可别再钓鱼了！”我的朋友们说，“这是浪费时间。”
+
+然而他们没有认识到重要的一点，我并不是真的对钓鱼有兴趣，我感兴趣的只是独坐孤舟，无所事事！`,
+    original:
+      `Fishing is my favourite sport. I often fish for hours without catching anything. But this does not worry me. Some fishermen are unlucky. Instead of catching fish, they catch old boots and rubbish. I am even less lucky. I never catch anything—not even old boots. After having spent whole mornings on the river, I always go home with an empty bag. “You must give up fishing!” my friends say. “It’s a waste of time.” But they don’t realize one important thing. I’m not really interested in fishing. I am only interested in sitting in a boat and doing nothing at all!`,
+  },
 ];
