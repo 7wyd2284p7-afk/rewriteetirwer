@@ -309,4 +309,125 @@ I went back to the ticket office at once.
     original:
       `Fishing is my favourite sport. I often fish for hours without catching anything. But this does not worry me. Some fishermen are unlucky. Instead of catching fish, they catch old boots and rubbish. I am even less lucky. I never catch anything—not even old boots. After having spent whole mornings on the river, I always go home with an empty bag. “You must give up fishing!” my friends say. “It’s a waste of time.” But they don’t realize one important thing. I’m not really interested in fishing. I am only interested in sitting in a boat and doing nothing at all!`,
   },
+
+  {
+    id: "nce2-021",
+    book: "新概念英语 2",
+    number: 21,
+    total: 96,
+    title: "Mad or not?",
+    titleCn: "是不是疯了？",
+    chinese:
+      "飞机正在逐渐把我逼疯。我住在一个机场附近，过往飞机日夜不停地发出噪声。机场是许多年前建的，但由于某种原因当时未能启用。然而去年机场开始使用了。有100多人肯定是被噪声逼得已经弃家远去，我是少数留下来的人中的一个。有时我觉得这房子就要被一架飞过的飞机撞倒。他们曾向我提供一大笔钱让我搬走，但我决定留在这儿。大家都说我肯定是疯了，也许他们说得对。",
+    original:
+      "Aeroplanes are slowly driving me mad. I live near an airport and passing planes can be heard night and day. The airport was built years ago, but for some reason it could not be used then. Last year, however, it came into use. Over a hundred people must have been driven away from their homes by the noise. I am one of the few people left. Sometimes I think this house will be knocked down by a passing plane. I have been offered a large sum of money to go away, but I am determined to stay here. Everybody says I must be mad and they are probably right.",
+  },
+  {
+    id: "nce2-022",
+    book: "新概念英语 2",
+    number: 22,
+    total: 96,
+    title: "A glass envelope",
+    titleCn: "玻璃信封",
+    chinese:
+      "我的女儿简从未想过会接到荷兰一位同龄姑娘的来信。去年，当我们横渡英吉利海峡时，简把写有她姓名和住址的一张纸条装进了一只瓶子，又将瓶子扔进了大海。此后她就再没去想那只瓶子。但10个月以后，她收到了荷兰一位姑娘的来信。现在这两位姑娘定期通信了。然而她们还是决定利用邮局。这样会稍微多花点钱，但肯定是快得多了。",
+    original:
+      "My daughter, Jane, never dreamed of receiving a letter from a girl of her own age in Holland. Last year, we were travelling across the Channel and Jane put a piece of paper with her name and address on it into a bottle. She threw the bottle into the sea. She never thought of it again, but ten months later, she received a letter from a girl in Holland. Both girls write to each other regularly now. However, they have decided to use the post office. Letters will cost a little more, but they will certainly travel faster.",
+  },
+  {
+    id: "nce2-023",
+    book: "新概念英语 2",
+    number: 23,
+    total: 96,
+    title: "A new house",
+    titleCn: "新居",
+    chinese:
+      "昨天我收到了姐姐的一封信，她住在尼日利亚。在信中她说她明年将到英国来。如果她来了，她会感到非常惊奇的。我们现在住在乡间的一栋漂亮的新住宅里。这栋房子在我姐姐离开之前就已动工了，是在5个月以前竣工的。我在信中告诉她，她可以和我们住在一起。这栋房子里有许多大房间，还有一个漂亮的花园。它是一栋非常现代化的住宅，因此在有些人看来很古怪。它肯定是这个地区唯一的一栋现代化住宅。",
+    original:
+      "I had a letter from my sister yesterday. She lives in Nigeria. In her letter, she said that she would come to England next year. If she comes, she will get a surprise. We are now living in a beautiful new house in the country. Work on it had begun before my sister left. The house was completed five months ago. In my letter, I told her that she could stay with us. The house has many large rooms and there is a lovely garden. It is a very modern house, so it looks strange to some people. It must be the only modern house in the district.",
+  },
+  {
+    id: "nce2-024",
+    book: "新概念英语 2",
+    number: 24,
+    total: 96,
+    title: "It could be worse",
+    titleCn: "不幸中之万幸",
+    chinese:
+      "我走进饭店经理的办公室，坐了下来。我刚刚丢了50英镑，感到非常烦恼。“我把钱放在房间里，”我说，“可现在没有了。”经理深表同情，但却无能为力。“现在大家都在丢钱，”他说。他开始抱怨起这个邪恶的世道来，却被一阵敲门声打断了。一个姑娘走了进来，把一个信封放在了他桌上。它里面装着50英镑。“这是我在这位先生的房门外捡到的，”她说。“是啊，”我对那位经理说，“这世界上还是有诚实可言的！”",
+    original:
+      "I entered the hotel manager’s office and sat down. I had just lost £50 and I felt very upset. “I left the money in my room,” I said, “and it’s not there now.” The manager was sympathetic, but he could do nothing. “Everyone’s losing money these days,” he said. He started to complain about this wicked world but was interrupted by a knock at the door. A girl came in and put an envelope on his desk. It contained £50. “I found this outside this gentleman’s room,” she said. “Well,” I said to the manager, “there is still some honesty in this world!”",
+  },
+  {
+    id: "nce2-025",
+    book: "新概念英语 2",
+    number: 25,
+    total: 96,
+    title: "Do the English speak English?",
+    titleCn: "英国人讲的是英语吗？",
+    chinese:
+      "我终于到了伦敦。火车站很大，又黑又暗。我不知道去饭店的路该怎么走，于是向一个搬运工打听。我的英语讲得不但非常认真，而且咬字也非常清楚。然而搬运工却不明白我的话。我把问话重复了很多遍，他终于听懂了。他回答了，但他讲得既不慢也不清楚。“我是个外国人，”我说。于是他说得慢了，可我还是听不懂。我的老师从来不那样讲英语！我和搬运工相视一笑。接着，他说了点什么，这回我听懂了。“您会很快学会英语的！”他说。我感到奇怪。在英国，人们各自说着一种不同的语言。英国人之间相互听得懂，可我却不懂他们的话！他们说的是英语吗？",
+    original:
+      "I arrived in London at last. The railway station was big, black and dark. I did not know the way to my hotel, so I asked a porter. I not only spoke English very carefully, but very clearly as well. The porter, however, could not understand me. I repeated my question several times and at last he understood. He answered me, but he spoke neither slowly nor clearly. “I am a foreigner,” I said. Then he spoke slowly, but I could not understand him. My teacher never spoke English like that! The porter and I looked at each other and smiled. Then he said something and I understood it. “You’ll soon learn English!” he said. I wonder. In England, each person speaks a different language. The English understand each other, but I don’t understand them! Do they speak English?",
+  },
+  {
+    id: "nce2-026",
+    book: "新概念英语 2",
+    number: 26,
+    total: 96,
+    title: "The best art critics",
+    titleCn: "最佳艺术评论家",
+    chinese:
+      "我是个学艺术的学生，画了很多画。有很多人装成很懂现代艺术的样子，总是告诉你一幅画的“意思”是什么。当然，有很多画是什么“意思”也没有的。它们就是些好看的图案，我们喜爱它们就像我们喜欢漂亮的窗帘布一样。我觉得小孩子们往往比任何人都更能欣赏现代绘画，他们观察到的东西更多。我的妹妹只有7岁，但她总能说出我的画是好还是坏。昨天她到我房里来了。\n“你在干什么呢？”她问。\n“我正把这幅画挂到墙上去。”我回答说，“这是幅新画，你喜欢吗？”\n她用挑剔的目光看了一会儿。“还可以吧，”她说，“不过，是不是挂倒了？”\n我再次看了看画。她说对了！是挂倒了！",
+    original:
+      "I am an art student and I paint a lot of pictures. Many people pretend that they understand modern art. They always tell you what a picture is “about”. Of course, many pictures are not “about” anything. They are just pretty patterns. We like them in the same way that we like pretty curtain material. I think that young children often appreciate modern pictures better than anyone else. They notice more. My sister is only seven, but she always tells me whether my pictures are good or not. She came into my room yesterday.\n“What are you doing?” she asked.\n“I’m hanging this picture on the wall,” I answered. “It’s a new one. Do you like it?”\nShe looked at it critically for a moment. “It’s all right,” she said, “but isn’t it upside down?”\nI looked at it again. She was right! It was!",
+  },
+  {
+    id: "nce2-027",
+    book: "新概念英语 2",
+    number: 27,
+    total: 96,
+    title: "A wet night",
+    titleCn: "雨夜",
+    chinese:
+      "傍晚时分，孩子们在田野中央搭起了帐篷。这件事刚刚做完，他们就在篝火上烧起了饭。他们全都饿了，饭菜散发出阵阵香味。他们美美地吃了一顿饭后，就围在营火旁讲起了故事，唱起了歌。但过了一阵子，天下起雨来。孩子们感到困倦了，于是他们扑灭了篝火，钻进了帐篷。睡袋既暖和又舒服，所以，他们都睡得很香。午夜前后，有两个孩子醒了，大声叫了起来。原来帐篷里到处都是水！他们全都跳出睡袋，跑到外面。雨下得很大，他们发现地上已经形成了一条小溪。那小溪弯弯曲曲穿过田野，然后正好从他们的帐篷底下流过去！",
+    original:
+      "Late in the afternoon, the boys put up their tent in the middle of a field. As soon as this was done, they cooked a meal over an open fire. They were all hungry and the food smelled good. After a wonderful meal, they told stories and sang songs by the campfire. But some time later it began to rain. The boys felt tired so they put out the fire and crept into their tent. Their sleeping bags were warm and comfortable, so they all slept soundly. In the middle of the night, two boys woke up and began shouting. The tent was full of water! They all leapt out of their sleeping bags and hurried outside. It was raining heavily and they found that a stream had formed in the field. The stream wound its way across the field and then flowed right under their tent!",
+  },
+  {
+    id: "nce2-028",
+    book: "新概念英语 2",
+    number: 28,
+    total: 96,
+    title: "No parking",
+    titleCn: "禁止停车",
+    chinese:
+      "贾斯珀·怀特是少有的相信古代神话的人之一。他刚在城里买下一所新房子，但自从搬进去后，就和汽车及车主们发生了摩擦。当他夜里回到家时，总是发现有人把车停在他家大门外。为此，他甚至一次也没能把自己的车开进车库。贾斯珀曾把几块“禁止停车”的牌子挂在大门外边，但没有任何效果。现在他把一个丑陋的石雕头像放在了大门上边，这是我见过的最丑陋的头像之一。我问他那是什么，他告诉我那是蛇发女怪美杜莎。贾斯珀希望她把汽车和车主们都变成石头。但到目前为止还没有一个人变成石头呢！",
+    original:
+      "Jasper White is one of those rare people who believes in ancient myths. He has just bought a new house in the city, but ever since he moved in, he has had trouble with cars and their owners. When he returns home at night, he always finds that someone has parked a car outside his gate. Because of this, he has not been able to get his own car into his garage even once. Jasper has put up “No Parking” signs outside his gate, but these have not had any effect. Now he has put an ugly stone head over the gate. It is one of the ugliest faces I have ever seen. I asked him what it was and he told me that it was Medusa, the Gorgon. Jasper hopes that she will turn cars and their owners to stone. But none of them has been turned to stone yet!",
+  },
+  {
+    id: "nce2-029",
+    book: "新概念英语 2",
+    number: 29,
+    total: 96,
+    title: "Taxi!",
+    titleCn: "出租汽车！",
+    chinese:
+      "本·福西特机长买了一辆不同寻常的出租汽车，并开始了一项新的业务。这辆“出租汽车”是一架小型瑞士飞机，叫“皮拉图斯·波特”号。这架奇妙的飞机可以载7名乘客。然而，最令人惊奇的是它能够在任何地方降落：雪地上、水面上，甚至刚耕过的田里。福西特机长的第一名乘客是位医生，他从伯明翰飞往威尔士山区一个偏僻的村庄。从那时开始，福西特机长已经载送乘客到过许多不寻常的地方。一次，他把飞机降落在了一栋公寓楼的屋顶上；还有一次，降落在了一个废弃的停车场上。福西特机长刚刚拒绝了一位商人的奇怪要求。这个人想要飞往大西洋上的一个孤岛——罗科尔岛，福西特机长之所以不送他去，是因为那段飞行太危险了。",
+    original:
+      "Captain Ben Fawcett has bought an unusual taxi and has begun a new service. The “taxi” is a small Swiss aeroplane called a “Pilatus Porter”. This wonderful plane can carry seven passengers. The most surprising thing about it, however, is that it can land anywhere: on snow, water, or even on a ploughed field. Captain Fawcett’s first passenger was a doctor who flew from Birmingham to a lonely village in the Welsh mountains. Since then, Captain Fawcett has flown passengers to many unusual places. Once he landed on the roof of a block of flats and on another occasion, he landed in a deserted car park. Captain Fawcett has just refused a strange request from a businessman. The man wanted to fly to Rockall, a lonely island in the Atlantic Ocean, but Captain Fawcett did not take him because the trip was too dangerous.",
+  },
+  {
+    id: "nce2-030",
+    book: "新概念英语 2",
+    number: 30,
+    total: 96,
+    title: "Football or polo?",
+    titleCn: "足球还是水球？",
+    chinese:
+      "威尔河是横穿过我家附近公园的一条小河。我喜欢在天气晴朗的下午到河边坐坐。上星期日天气很暖和，于是我和往常一样，又去河边坐着。河岸上有些孩子正在玩耍，河面上有些人正在划船。突然，一个孩子狠狠地踢了一脚球，球便向一只划过来的小船飞去。岸上的一些人对着小船上的人高喊，但他没有听见。球重重地打在他身上，使他差点儿落入水中。我转过头去看那些孩子，但一个也看不见，他们全都跑了！当那个人明白了发生的事情时，笑了起来。他大声叫着那些孩子，把球扔回到岸上。",
+    original:
+      "The Wayle is a small river that cuts across the park near my home. I like sitting by the Wayle on fine afternoons. It was warm last Sunday, so I went and sat on the river bank as usual. Some children were playing games on the bank and there were some people rowing on the river. Suddenly, one of the children kicked a ball very hard and it went towards a passing boat. Some people on the bank called out to the man in the boat, but he did not hear them. The ball struck him so hard that he nearly fell into the water. I turned to look at the children, but there weren’t any in sight: they had all run away! The man laughed when he realized what had happened. He called out to the children and threw the ball back to the bank.",
+  },
 ];
