@@ -360,8 +360,7 @@ function renderWritingArea() {
       <div class="section-label"><span>03</span> 英文原文</div>
       ${state.original ? `<div class="english-copy"><p>${comparison.highlightedOriginal.replace(/<br>/g, "</p><p>")}</p></div>` : `<div class="empty-original">
         <div class="book-mark">Aa</div>
-        <div><strong>还没有录入英文原文</strong><p>点击“编辑内容”，粘贴你书中的 Lesson ${lesson.number} 原文。保存后会在这里显示。</p></div>
-        <button type="button" id="add-original">现在录入</button>
+        <div><strong>暂无英文原文</strong><p>这节课尚未提供英文原文。</p></div>
       </div>`}
     </article>
     <button class="restart-button" id="restart" type="button">重新练习这一课</button>
@@ -380,18 +379,49 @@ function renderLessonSwitcher() {
 function renderSettingsModal() {
   if (!state.settingsOpen) return "";
   return `<div class="modal-backdrop" id="settings-backdrop">
-    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <section class="modal original-modal" id="original-modal" role="dialog" aria-modal="true" aria-label="英文原文">
       <button class="close-button" id="close-modal" type="button" aria-label="关闭">×</button>
-      <div class="eyebrow">LESSON ${String(lesson.number).padStart(2, "0")}</div>
-      <h2 id="modal-title">录入英文原文</h2>
-      <p>把你拥有的新概念英语课文粘贴到这里。内容只保存在当前浏览器中。</p>
-      <textarea id="original-editor" placeholder="粘贴 ${escapeHTML(lesson.title)} 英文原文…"></textarea>
-      <div class="modal-actions">
-        <button type="button" class="secondary-button" id="cancel-modal">取消</button>
-        <button type="button" class="primary-button compact" id="save-original">保存原文</button>
+      <div class="modal-drag-handle" id="original-drag-handle">
+        <div class="eyebrow">LESSON ${String(lesson.number).padStart(2, "0")}</div>
       </div>
+      <div class="original-modal-copy">${state.original ? escapeHTML(state.original) : "暂无英文原文。"}</div>
     </section>
   </div>`;
+}
+
+function enableModalDragging() {
+  const modal = document.getElementById("original-modal");
+  const handle = document.getElementById("original-drag-handle");
+  if (!modal || !handle) return;
+  handle.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const initialX = Number(modal.dataset.offsetX || 0);
+    const initialY = Number(modal.dataset.offsetY || 0);
+    const rect = modal.getBoundingClientRect();
+    handle.setPointerCapture(event.pointerId);
+    handle.classList.add("is-dragging");
+    const move = (moveEvent) => {
+      const maxLeft = window.innerWidth - rect.width;
+      const maxTop = window.innerHeight - rect.height;
+      const x = Math.min(Math.max(initialX + moveEvent.clientX - startX, initialX - rect.left), initialX + maxLeft - rect.left);
+      const y = Math.min(Math.max(initialY + moveEvent.clientY - startY, initialY - rect.top), initialY + maxTop - rect.top);
+      modal.dataset.offsetX = String(x);
+      modal.dataset.offsetY = String(y);
+      modal.style.transform = `translate(${x}px, ${y}px)`;
+    };
+    const stop = () => {
+      handle.classList.remove("is-dragging");
+      handle.removeEventListener("pointermove", move);
+      handle.removeEventListener("pointerup", stop);
+      handle.removeEventListener("pointercancel", stop);
+    };
+    handle.addEventListener("pointermove", move);
+    handle.addEventListener("pointerup", stop);
+    handle.addEventListener("pointercancel", stop);
+  });
 }
 
 function renderLibraryModal() {
@@ -419,10 +449,10 @@ function render() {
   document.title = `回译室 · ${lesson.title}`;
   root.innerHTML = `<div class="app-shell ${state.mode === "writing" ? "is-writing" : ""}">
     <header class="topbar">
-      <div class="brand"><span>RE:</span>WRITE <em>回译室</em></div>
+      <div class="brand"><span>RE:</span>WRITE</div>
       <div class="top-actions">
         <button class="ghost-button" id="library" type="button">课程库</button>
-        <button class="ghost-button" id="edit-content" type="button">编辑内容</button>
+        <button class="ghost-button" id="view-original" type="button">查看原文</button>
       </div>
     </header>
     <main class="lesson-page">
@@ -443,7 +473,7 @@ function render() {
     ${renderLibraryModal()}
   </div>`;
 
-  document.getElementById("edit-content")?.addEventListener("click", openSettings);
+  document.getElementById("view-original")?.addEventListener("click", openSettings);
   document.getElementById("library")?.addEventListener("click", openLibrary);
   document.getElementById("start-writing")?.addEventListener("click", () => {
     state.startedAt = Date.now(); state.mode = "writing"; render();
@@ -471,20 +501,14 @@ function render() {
   document.getElementById("previous-lesson")?.addEventListener("click", () => switchLesson(currentIndex - 1));
   document.getElementById("next-lesson")?.addEventListener("click", () => switchLesson(currentIndex + 1));
   document.querySelectorAll("[data-lesson-index]").forEach((button) => button.addEventListener("click", () => switchLesson(Number(button.dataset.lessonIndex))));
-  document.getElementById("add-original")?.addEventListener("click", openSettings);
   document.getElementById("close-modal")?.addEventListener("click", closeSettings);
-  document.getElementById("cancel-modal")?.addEventListener("click", closeSettings);
   document.getElementById("settings-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeSettings());
-  const editor = document.getElementById("original-editor");
-  if (editor) editor.value = state.original;
-  document.getElementById("save-original")?.addEventListener("click", () => {
-    state.original = editor.value.trim(); localStorage.setItem(keys.original, state.original); closeSettings();
-  });
+  enableModalDragging();
   document.getElementById("close-library")?.addEventListener("click", closeLibrary);
   document.getElementById("library-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeLibrary());
 }
 
-function openSettings() { state.settingsOpen = true; render(); document.getElementById("original-editor")?.focus(); }
+function openSettings() { state.settingsOpen = true; render(); document.getElementById("close-modal")?.focus(); }
 function closeSettings() { state.settingsOpen = false; render(); }
 function openLibrary() { state.libraryOpen = true; render(); }
 function closeLibrary() { state.libraryOpen = false; render(); }
