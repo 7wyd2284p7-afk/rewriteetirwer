@@ -1,5 +1,6 @@
 const lessons = window.RETRANSLATE_LESSONS;
 const currentLessonKey = "retranslate.currentLesson";
+const libraryRanges = [[1, 20], [21, 40], [41, 60], [61, 80], [81, 96]];
 let currentIndex = Math.min(Math.max(Number(localStorage.getItem(currentLessonKey) || 0), 0), lessons.length - 1);
 let lesson = lessons[currentIndex];
 let keys = lessonKeys(lesson);
@@ -24,6 +25,7 @@ function readLessonState() {
     startedAt: null,
     settingsOpen: false,
     libraryOpen: false,
+    libraryRangeIndex: libraryRanges.findIndex(([start, end]) => lesson.number >= start && lesson.number <= end),
   };
 }
 
@@ -426,12 +428,16 @@ function enableModalDragging() {
 
 function renderLibraryModal() {
   if (!state.libraryOpen) return "";
-  const cards = lessons.map((item, index) => {
+  const [start, end] = libraryRanges[state.libraryRangeIndex];
+  const rangeTabs = libraryRanges.map(([from, to], index) => `<button class="library-range" type="button" role="tab" aria-label="${from}–${to}课" aria-selected="${index === state.libraryRangeIndex}" data-library-range="${index}">
+    <strong>${from}–${to}</strong><small>LESSONS</small>
+  </button>`).join("");
+  const cards = lessons.map((item, index) => ({ item, index })).filter(({ item }) => item.number >= start && item.number <= end).map(({ item, index }) => {
     const completed = localStorage.getItem(lessonKeys(item).completed) === "true";
     return `<button class="lesson-card ${index === currentIndex ? "active" : ""}" type="button" data-lesson-index="${index}">
       <span class="lesson-card-number">${String(item.number).padStart(2, "0")}</span>
       <span><strong>${escapeHTML(item.title)}</strong><small>${escapeHTML(item.titleCn)}</small></span>
-      <em>${completed ? "已完成 ✓" : index === currentIndex ? "当前" : "开始"}</em>
+      <em aria-label="${completed ? "已完成" : index === currentIndex ? "当前课程" : "开始课程"}">${completed ? "✓" : index === currentIndex ? "当前" : "→"}</em>
     </button>`;
   }).join("");
   return `<div class="modal-backdrop" id="library-backdrop">
@@ -439,7 +445,9 @@ function renderLibraryModal() {
       <button class="close-button" id="close-library" type="button" aria-label="关闭">×</button>
       <div class="eyebrow">NEW CONCEPT ENGLISH 2</div>
       <h2 id="library-title">课程库</h2>
-      <p>每一课分别保存练习记录。目前已录入 ${lessons.length} 课。</p>
+      <p>每一课分别保存练习记录。选择课数范围，再选择课程。</p>
+      <div class="library-ranges" role="tablist" aria-label="课程范围">${rangeTabs}</div>
+      <div class="library-range-summary"><strong>第 ${start}–${end} 课</strong><span>共 ${end - start + 1} 课</span></div>
       <div class="lesson-list">${cards}</div>
     </section>
   </div>`;
@@ -447,6 +455,7 @@ function renderLibraryModal() {
 
 function render() {
   document.title = `回译室 · ${lesson.title}`;
+  document.body.classList.toggle("has-modal", state.settingsOpen || state.libraryOpen);
   root.innerHTML = `<div class="app-shell ${state.mode === "writing" ? "is-writing" : ""}">
     <header class="topbar">
       <div class="brand"><span>RE:</span>WRITE</div>
@@ -500,6 +509,11 @@ function render() {
   });
   document.getElementById("previous-lesson")?.addEventListener("click", () => switchLesson(currentIndex - 1));
   document.getElementById("next-lesson")?.addEventListener("click", () => switchLesson(currentIndex + 1));
+  document.querySelectorAll("[data-library-range]").forEach((button) => button.addEventListener("click", () => {
+    state.libraryRangeIndex = Number(button.dataset.libraryRange);
+    render();
+    document.querySelector(`[data-library-range="${state.libraryRangeIndex}"]`)?.focus();
+  }));
   document.querySelectorAll("[data-lesson-index]").forEach((button) => button.addEventListener("click", () => switchLesson(Number(button.dataset.lessonIndex))));
   document.getElementById("close-modal")?.addEventListener("click", closeSettings);
   document.getElementById("settings-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeSettings());
@@ -510,7 +524,12 @@ function render() {
 
 function openSettings() { state.settingsOpen = true; render(); document.getElementById("close-modal")?.focus(); }
 function closeSettings() { state.settingsOpen = false; render(); }
-function openLibrary() { state.libraryOpen = true; render(); }
+function openLibrary() {
+  state.libraryRangeIndex = libraryRanges.findIndex(([start, end]) => lesson.number >= start && lesson.number <= end);
+  state.libraryOpen = true;
+  render();
+  document.getElementById("close-library")?.focus();
+}
 function closeLibrary() { state.libraryOpen = false; render(); }
 
 render();
