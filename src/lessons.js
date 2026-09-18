@@ -1228,4 +1228,65 @@ I went back to the ticket office at once.
     original:
       "A Festival for the Dead is held once a year in Japan. This festival is a cheerful occasion, for on this day, the dead are said to return to their homes and they are welcomed by the living. As they are expected to be hungry after their long journey, food is laid out for them. Specially-made lanterns are hung outside each house to help the dead to find their way. All night long, people dance and sing. In the early morning, the food that had been laid out for the dead is thrown into a river or into the sea as it is considered unlucky for anyone living to eat it. In towns that are near the sea, the tiny lanterns which had been hung in the streets the night before, are placed into the water when the festival is over. Thousands of lanterns slowly drift out to sea guiding the dead on their return journey to the other world. This is a moving spectacle, for crowds of people stand on the shore watching the lanterns drifting away until they can be seen no more.",
   },
+
+  {
+    id: "nce3-001",
+    book: "新概念英语 3",
+    number: 1,
+    total: 60,
+    title: "A puma at large",
+    titleCn: "逃遁的美洲狮",
+    chinese:
+      "美洲狮是一种体形似猫的大动物，产于美洲。当伦敦动物园接到报告说，在伦敦以南45英里处发现一只美洲狮时，这些报告并没有受到重视。可是，随着证据越来越多，动物园的专家们感到有必要进行一番调查，因为凡是声称见到过美洲狮的人们所描述的情况竟是出奇地相似。\n\n搜寻美洲狮的工作是从一座小村庄开始的。那里的一位妇女在采摘黑莓时看见“一只大猫”，离她仅5码远，她刚看见它，它就立刻逃走了。专家证实，美洲狮除非被逼得走投无路，是决不会伤人的。事实上搜寻工作很困难，因为常常是早晨在甲地发现那只美洲狮，晚上却在20英里外的乙地发现它的踪迹。无论它走到哪儿，一路上总会留下一串死鹿以及死兔子之类的小动物。在许多地方看见了爪印，灌木丛中也发现了粘在上面的美洲狮毛。有人抱怨说夜里听见了“像猫一样的叫声”；一位商人去钓鱼，看见那只美洲狮在树上。专家们如今已经完全肯定那只动物就是美洲狮，但它是从哪儿来的呢？由于全国动物园没有一家报告丢了美洲狮，因此那只美洲狮一定是某位私人收藏家饲养的，不知怎么设法逃出来了。搜寻工作进行了好几个星期，但始终未能逮住那只美洲狮。想到在宁静的乡村里有一头危险的野兽继续逍遥流窜，真令人担心。",
+    original:
+      "Pumas are large, cat-like animals which are found in America. When reports came into London Zoo that a wild puma had been spotted forty-five miles south of London, they were not taken seriously. However, as the evidence began to accumulate, experts from the Zoo felt obliged to investigate, for the descriptions given by people who claimed to have seen the puma were extraordinarily similar.\n\nThe hunt for the puma began in a small village where a woman picking blackberries saw ‘a large cat’ only five yards away from her. It immediately ran away when she saw it, and experts confirmed that a puma will not attack a human being unless it is cornered. The search proved difficult, for the puma was often observed at one place in the morning and at another place twenty miles away in the evening. Wherever it went, it left behind it a trail of dead deer and small animals like rabbits. Paw prints were seen in a number of places and puma fur was found clinging to bushes. Several people complained of ‘cat-like noises’ at night and a businessman on a fishing trip saw the puma up a tree. The experts were now fully convinced that the animal was a puma, but where had it come from? As no pumas had been reported missing from any zoo in the country, this one must have been in the possession of a private collector and somehow managed to escape. The hunt went on for several weeks, but the puma was not caught. It is disturbing to think that a dangerous wild animal is still at large in the quiet countryside.",
+  },
+  {
+    id: "nce3-002",
+    book: "新概念英语 3",
+    number: 2,
+    total: 60,
+    title: "Thirteen equals one",
+    titleCn: "十三等于一",
+    chinese:
+      "我们教区的牧师总是为各种各样的事筹集资金，但始终未能筹足资金把教堂的钟修好。教堂的钟很大，以前不分昼夜打点报时，但在很多年前遭到毁坏，从此便无声无息了。\n\n一天夜里，我们的牧师突然被惊醒了，大钟又在“打点”报时了！他一看表，才1点钟，可是那钟一连敲了13下才停。牧师拿着一支电筒走上钟楼想去看看究竟发生了什么事情。借着电筒光，他看见一个人，马上认出那是本地杂货店店主比尔·威尔金斯。\n\n“你究竟在这上面干什么，比尔？”牧师惊讶地问。\n\n“我想把这口钟修好，”比尔回答说。“好几个星期了，我天天夜里到钟楼上来。嗯，我是想让你大吃一惊。”\n\n“你确实使我大吃了一惊！”牧师说，“也许同时你把村里所有的人都吵醒了。不过，钟又能报时了，我还是很高兴的。”\n\n“问题就在这里，牧师，”比尔回答说。“不错，钟是能报时了，但是，恐怕每到1点钟，它总要敲13下，对此我已无能为力了。”\n\n“大家慢慢就习惯了，比尔，”牧师说。“13下是不如1下好，但总比1下不敲强。来，咱们下楼去喝杯茶吧。”",
+    original:
+      "Our vicar is always raising money for one cause or another, but he has never managed to get enough money to have the church clock repaired. The big clock which used to strike the hours day and night was damaged many years ago and has been silent ever since.\n\nOne night, however, our vicar woke up with a start: the clock was striking the hours! Looking at his watch, he saw that it was one o’clock, but the bell struck thirteen times before it stopped. Armed with a torch, the vicar went up into the clock tower to see what was going on. In the torchlight, he caught sight of a figure whom he immediately recognized as Bill Wilkins, our local grocer.\n\n‘Whatever are you doing up here Bill?’ asked the vicar in surprise.\n\n‘I’m trying to repair the bell,’ answered Bill. ‘I’ve been coming up here night after night for weeks now. You see, I was hoping to give you a surprise.’\n\n‘You certainly did give me a surprise!’ said the vicar. ‘You’ve probably woken up everyone in the village as well. Still, I’m glad the bell is working again.’\n\n‘That’s the trouble, vicar,’ answered Bill. ‘It’s working all right, but I’m afraid that at one o’clock it will strike thirteen times and there’s nothing I can do about it.’\n\n‘We’ll get used to that, Bill,’ said the vicar. ‘Thirteen is not as good as one, but it’s better than nothing. Now let’s go downstairs and have a cup of tea.’",
+  },
+  {
+    id: "nce3-003",
+    book: "新概念英语 3",
+    number: 3,
+    total: 60,
+    title: "An unknown goddess",
+    titleCn: "无名女神",
+    chinese:
+      "不久之前，在爱琴海的基亚岛上，考古工作者有一项有趣的发现。一个美国考古队在阿伊亚·依里尼海角的一座古城里考察了一座庙宇。这座古城肯定一度很繁荣，因为它曾享有高度的文明，房子一般有3层楼高，用石块修建。里面房间很大，墙壁装饰华丽。城里甚至还敷设了排水系统，因为在狭窄的街道底下发现了许许多多陶土制作的排水管道。\n\n考古工作者考察的这座庙宇从公元前15世纪直至罗马时代一直是祭祀祈祷的场所。在庙中最神圣的一间殿堂里发现了15尊陶制雕像的碎片，每一尊雕像代表一位女神，而且一度上过色。其中有一尊雕像，她的躯体是在公元前15世纪的历史文物中发现的，而她那身首异处的脑袋却碰巧是在公元前5世纪的文物中找到的。她的脑袋一定是在古希腊罗马时代就为人所发现，并受到了精心的保护。即使在当时，它也属历史悠久的珍奇之物。考古工作者把这些碎片重新拼装起来后，惊奇地发现那位女神原来是一位相貌十分摩登的女郎。她身高3英尺，双手叉腰，身穿一条拖地长裙，尽管上了年纪，但体态确实优美。不过，考古工作者至今未能确定这位女神的身份。",
+    original:
+      "Some time ago, an interesting discovery was made by archaeologists on the Aegean island of Kea. An American team explored a temple which stands in an ancient city on the promontory of Ayia Irini. The city at one time must have been prosperous, for it enjoyed a high level of civilization. Houses — often three storeys high — were built of stone. They had large rooms with beautifully decorated walls. The city was even equipped with a drainage system, for a great many clay pipes were found beneath the narrow streets.\n\nThe temple which the archaeologists explored was used as a place of worship from the fifteenth century B.C. until Roman times. In the most sacred room of the temple, clay fragments of fifteen statues were found. Each of these represented a goddess and had, at one time, been painted. The body of one statue was found among remains dating from the fifteenth century B.C. Its missing head happened to be among remains of the fifth century B.C. This head must have been found in Classical times and carefully preserved. It was very old and precious even then. When the archaeologists reconstructed the fragments, they were amazed to find that the goddess turned out to be a very modern-looking woman. She stood three feet high and her hands rested on her hips. She was wearing a full-length skirt which swept the ground. Despite her great age, she was very graceful indeed, but, so far, the archaeologists have been unable to discover her identity.",
+  },
+  {
+    id: "nce3-004",
+    book: "新概念英语 3",
+    number: 4,
+    total: 60,
+    title: "The double life of Alfred Bloggs",
+    titleCn: "阿尔弗雷德·布洛格斯的双重生活",
+    chinese:
+      "如今，从事体力劳动的人的收入一般要比坐办公室的人高出许多。坐办公室的人之所以常常被称作“白领工人”，就是因为他们通常是穿着硬领白衬衫，系着领带去上班。许多人常常情愿放弃较高的薪水以换取做白领工人的殊荣，此乃人之常情。而这常常会引起种种奇怪的现象，在埃尔斯米尔公司当清洁工的艾尔弗雷德·布洛格斯就是一个例子。\n\n艾尔弗结婚时，感到非常难为情，而没有将自己的职业告诉妻子。他只说在埃尔斯米尔公司上班。每天早晨，他穿上一身漂亮的黑色西装离家上班，然后换上工作服，当8个小时清洁工。晚上回家前，他洗个淋浴，重新换上那身黑色西服。两年多以来，艾尔弗一直这样，他的同事也为他保守秘密。艾尔弗的妻子一直不知道她嫁给了一个清洁工，而且她永远也不会知道了，因为艾尔弗已找到新职，不久就要坐在办公室里工作了。他将来挣的钱只有他现在的一半。不过他觉得，地位升高了，损失点儿钱也值得。从此，艾尔弗可以一天到晚穿西服了。别人将称呼他为“布洛格斯先生”，而不再叫他“艾尔弗”了。",
+    original:
+      "These days, people who do manual work often receive far more money than people who work in offices. People who work in offices are frequently referred to as ‘white-collar workers’ for the simple reason that they usually wear a collar and tie to go to work. Such is human nature, that a great many people are often willing to sacrifice higher pay for the privilege of becoming white-collar workers. This can give rise to curious situations, as it did in the case of Alfred Bloggs who worked as a dustman for the Ellesmere Corporation.\n\nWhen he got married, Alf was too embarrassed to say anything to his wife about his job. He simply told her that he worked for the Corporation. Every morning, he left home dressed in a smart black suit. He then changed into overalls and spent the next eight hours as a dustman. Before returning home at night, he took a shower and changed back into his suit. Alf did this for over two years and his fellow dustmen kept his secret. Alf’s wife has never discovered that she married a dustman and she never will, for Alf has just found another job. He will soon be working in an office. He will be earning only half as much as he used to, but he feels that his rise in status is well worth the loss of money. From now on, he will wear a suit all day and others will call him ‘Mr. Bloggs’, not ‘Alf’.",
+  },
+  {
+    id: "nce3-005",
+    book: "新概念英语 3",
+    number: 5,
+    total: 60,
+    title: "The facts",
+    titleCn: "确切数字",
+    chinese:
+      "报刊杂志的编辑常常为了向读者提供一些无关紧要的事实和统计数字而走向极端。去年，一位记者受一家有名的杂志的委托写一篇关于非洲某个新成立共和国总统府的文章。稿子寄来后，编辑看了第一句话就拒绝予以发表。文章的开头是这样的：“几百级台阶通向环绕总统府的高墙。”编辑立即给那位记者发去传真，要求他核实一下台阶的确切数字和围墙的高度。\n\n记者立即出发去核实这些重要的事实，但过了好长时间不见他把数字寄来。在此期间，编辑等得不耐烦了，因为杂志马上要付印。他给记者先后发去两份传真，但对方毫无反应。于是他又发了一份传真，通知那位记者说，若再不迅速答复，将被解雇。但记者还是没有回复。编辑无奈，勉强按原样发稿了。一周之后，编辑终于接到了记者的传真。那个可怜的记者不仅被捕了，而且还被送进了监狱。不过，他终于获准发回了一份传真。在传真中他告诉编辑，就在他数通向15英尺高的总统府围墙的1,084级台阶时，被抓了起来。",
+    original:
+      "Editors of newspapers and magazines often go to extremes to provide their readers with unimportant facts and statistics. Last year a journalist had been instructed by a well-known magazine to write an article on the president’s palace in a new African republic. When the article arrived, the editor read the first sentence and then refused to publish it. The article began: ‘Hundreds of steps lead to the high wall which surrounds the president’s palace.’ The editor at once sent the journalist a fax instructing him to find out the exact number of steps and the height of the wall.\n\nThe journalist immediately set out to obtain these important facts, but he took a long time to send them. Meanwhile, the editor was getting impatient, for the magazine would soon go to press. He sent the journalist two more faxes, but received no reply. He sent yet another fax informing the journalist that if he did not reply soon he would be fired. When the journalist again failed to reply, the editor reluctantly published the article as it had originally been written. A week later, the editor at last received a fax from the journalist. Not only had the poor man been arrested, but he had been sent to prison as well. However, he had at last been allowed to send a fax in which he informed the editor that he had been arrested while counting the 1,084 steps leading to the fifteen-foot wall which surrounded the president’s palace.",
+  },
 ];

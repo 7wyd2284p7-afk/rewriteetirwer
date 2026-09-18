@@ -1,12 +1,20 @@
 const lessons = window.RETRANSLATE_LESSONS;
 const currentLessonKey = "retranslate.currentLesson";
-const libraryRanges = [[1, 20], [21, 40], [41, 60], [61, 80], [81, 96]];
+function bookNumber(item) { return Number(item.id.match(/^nce(\d+)-/)?.[1]); }
+const libraryBooks = [...new Set(lessons.map(bookNumber))];
+function bookLessons(book) { return lessons.filter((item) => bookNumber(item) === book); }
+function rangesForBook(book) {
+  const last = Math.max(...bookLessons(book).map((item) => item.number));
+  return Array.from({ length: Math.ceil(last / 20) }, (_, index) => [index * 20 + 1, Math.min((index + 1) * 20, last)]);
+}
 let currentIndex = Math.min(Math.max(Number(localStorage.getItem(currentLessonKey) || 0), 0), lessons.length - 1);
 let lesson = lessons[currentIndex];
 let keys = lessonKeys(lesson);
+let currentView = "home";
+let homeBook = libraryBooks[0];
 
 function lessonKeys(item) {
-  const prefix = `retranslate.lesson2.${item.number}`;
+  const prefix = `retranslate.lesson${bookNumber(item)}.${item.number}`;
   return {
     original: `${prefix}.original`,
     draft: `${prefix}.draft`,
@@ -25,7 +33,8 @@ function readLessonState() {
     startedAt: null,
     settingsOpen: false,
     libraryOpen: false,
-    libraryRangeIndex: libraryRanges.findIndex(([start, end]) => lesson.number >= start && lesson.number <= end),
+    libraryBook: bookNumber(lesson),
+    libraryRangeIndex: rangesForBook(bookNumber(lesson)).findIndex(([start, end]) => lesson.number >= start && lesson.number <= end),
   };
 }
 
@@ -327,10 +336,56 @@ function switchLesson(index) {
   currentIndex = index;
   lesson = lessons[currentIndex];
   keys = lessonKeys(lesson);
+  currentView = "lesson";
   localStorage.setItem(currentLessonKey, String(currentIndex));
   Object.assign(state, readLessonState());
   window.scrollTo({ top: 0, behavior: "smooth" });
   render();
+}
+
+function renderHome() {
+  const savedIndex = localStorage.getItem(currentLessonKey);
+  const recentLesson = savedIndex === null ? lessons[0] : lesson;
+  const bookCards = libraryBooks.map((book) => `<button class="home-book" type="button" data-home-book="${book}" aria-pressed="${homeBook === book}">
+    <span class="home-book-top"><span>NEW CONCEPT ENGLISH</span><span>已收录 ${bookLessons(book).length} 课</span></span>
+    <span class="home-book-num">${String(book).padStart(2, "0")}</span>
+    <span class="home-book-bottom"><span class="home-book-title">新概念英语 第${book === 2 ? "二" : "三"}册<small>${book === 2 ? "Practice &amp; Progress" : "Developing Skills"}</small></span><span class="home-book-cta">查看课程 ↗</span></span>
+  </button>`).join("");
+  const previewLessons = bookLessons(homeBook).slice(0, 3).map((item) => `<button class="home-lesson" type="button" data-home-lesson="${lessons.indexOf(item)}">
+    <span>LESSON ${String(item.number).padStart(2, "0")}</span><strong>${escapeHTML(item.title)}</strong><em>${escapeHTML(item.titleCn)}</em>
+  </button>`).join("");
+  document.title = "回译室 · 首页";
+  document.body.classList.toggle("has-modal", state.libraryOpen);
+  root.innerHTML = `<div class="home-shell"><div class="home-wrap">
+    <header class="home-header"><div class="home-brand">RE:WRITE <span>回译室</span></div><button class="home-header-link" id="home-library" type="button">课程库 ↗</button></header>
+    <main>
+      <section class="home-hero" aria-labelledby="home-title">
+        <div><div class="home-eyebrow">NEW CONCEPT ENGLISH</div><h1 id="home-title">Your next lesson<br><em>starts here.</em></h1>
+          <p class="home-intro">Choose a textbook. Read the original, then rewrite it in your own English—one lesson at a time.</p>
+          <div class="home-hero-foot"><span></span> READ · RECALL · REWRITE</div>
+        </div>
+        <aside class="home-continue" data-book="${String(bookNumber(recentLesson)).padStart(2, "0")}"><div class="home-continue-top"><span>${savedIndex === null ? "从第一课开始" : "继续上次学习"}</span><span class="home-dot" aria-hidden="true"></span></div>
+          <h2>Lesson ${String(recentLesson.number).padStart(2, "0")}<br>${escapeHTML(recentLesson.title)}</h2><p>${escapeHTML(recentLesson.titleCn)}</p>
+          <button id="home-continue" type="button">${savedIndex === null ? "开始练习" : "继续练习"} <span aria-hidden="true">↗</span></button>
+        </aside>
+      </section>
+      <section class="home-courses" aria-labelledby="home-courses-title">
+        <div class="home-section-head"><div><div class="home-kicker">YOUR LIBRARY / 课程入口</div><h2 id="home-courses-title">Choose a textbook</h2></div></div>
+        <div class="home-books">${bookCards}</div>
+        <div class="home-preview"><div class="home-preview-head"><strong>第${homeBook === 2 ? "二" : "三"}册 · 课程预览</strong><button id="home-all-lessons" type="button">查看全部课程 ↗</button></div><div class="home-lessons">${previewLessons}</div></div>
+      </section>
+    </main><footer class="home-footer"><span>RE:WRITE · 回译室</span><span>NEW CONCEPT ENGLISH · RETRANSLATION PRACTICE</span></footer>
+  </div>${renderLibraryModal()}</div>`;
+  document.getElementById("home-continue").addEventListener("click", () => switchLesson(savedIndex === null ? 0 : currentIndex));
+  document.querySelectorAll("[data-home-book]").forEach((button) => button.addEventListener("click", () => {
+    homeBook = Number(button.dataset.homeBook);
+    render();
+    document.querySelector(`[data-home-book="${homeBook}"]`)?.focus();
+  }));
+  document.querySelectorAll("[data-home-lesson]").forEach((button) => button.addEventListener("click", () => switchLesson(Number(button.dataset.homeLesson))));
+  document.getElementById("home-library").addEventListener("click", () => openLibrary(homeBook));
+  document.getElementById("home-all-lessons").addEventListener("click", () => openLibrary(homeBook));
+  attachLibraryEvents();
 }
 
 function renderWritingArea() {
@@ -371,10 +426,12 @@ function renderWritingArea() {
 
 function renderLessonSwitcher() {
   if (state.mode === "writing") return "";
+  const previousInBook = lessons[currentIndex - 1]?.book === lesson.book;
+  const nextInBook = lessons[currentIndex + 1]?.book === lesson.book;
   return `<nav class="lesson-switcher" aria-label="课程切换">
-    <button type="button" id="previous-lesson" ${currentIndex === 0 ? "disabled" : ""}>← 上一课</button>
-    <span>${currentIndex + 1} / ${lessons.length} 已录入</span>
-    <button type="button" id="next-lesson" ${currentIndex === lessons.length - 1 ? "disabled" : ""}>下一课 →</button>
+    <button type="button" id="previous-lesson" ${previousInBook ? "" : "disabled"}>← 上一课</button>
+    <span>${lesson.number} / ${bookLessons(bookNumber(lesson)).length} 已录入</span>
+    <button type="button" id="next-lesson" ${nextInBook ? "" : "disabled"}>下一课 →</button>
   </nav>`;
 }
 
@@ -428,11 +485,14 @@ function enableModalDragging() {
 
 function renderLibraryModal() {
   if (!state.libraryOpen) return "";
-  const [start, end] = libraryRanges[state.libraryRangeIndex];
-  const rangeTabs = libraryRanges.map(([from, to], index) => `<button class="library-range" type="button" role="tab" aria-label="${from}–${to}课" aria-selected="${index === state.libraryRangeIndex}" data-library-range="${index}">
+  const book = state.libraryBook;
+  const ranges = rangesForBook(book);
+  const [start, end] = ranges[state.libraryRangeIndex];
+  const bookTabs = libraryBooks.map((number) => `<button class="library-book" type="button" role="tab" aria-selected="${number === book}" data-library-book="${number}">新概念英语 ${number}</button>`).join("");
+  const rangeTabs = ranges.map(([from, to], index) => `<button class="library-range" type="button" role="tab" aria-label="${from}–${to}课" aria-selected="${index === state.libraryRangeIndex}" data-library-range="${index}">
     <strong>${from}–${to}</strong><small>LESSONS</small>
   </button>`).join("");
-  const cards = lessons.map((item, index) => ({ item, index })).filter(({ item }) => item.number >= start && item.number <= end).map(({ item, index }) => {
+  const cards = lessons.map((item, index) => ({ item, index })).filter(({ item }) => bookNumber(item) === book && item.number >= start && item.number <= end).map(({ item, index }) => {
     const completed = localStorage.getItem(lessonKeys(item).completed) === "true";
     return `<button class="lesson-card ${index === currentIndex ? "active" : ""}" type="button" data-lesson-index="${index}">
       <span class="lesson-card-number">${String(item.number).padStart(2, "0")}</span>
@@ -443,10 +503,11 @@ function renderLibraryModal() {
   return `<div class="modal-backdrop" id="library-backdrop">
     <section class="modal library-modal" role="dialog" aria-modal="true" aria-labelledby="library-title">
       <button class="close-button" id="close-library" type="button" aria-label="关闭">×</button>
-      <div class="eyebrow">NEW CONCEPT ENGLISH 2</div>
+      <div class="eyebrow">NEW CONCEPT ENGLISH ${book}</div>
       <h2 id="library-title">课程库</h2>
-      <p>每一课分别保存练习记录。选择课数范围，再选择课程。</p>
-      <div class="library-ranges" role="tablist" aria-label="课程范围">${rangeTabs}</div>
+      <p>每一课分别保存练习记录。本册已录入 ${bookLessons(book).length} 课。</p>
+      <div class="library-books" role="tablist" aria-label="教材册数">${bookTabs}</div>
+      ${ranges.length > 1 ? `<div class="library-ranges" role="tablist" aria-label="课程范围">${rangeTabs}</div>` : ""}
       <div class="library-range-summary"><strong>第 ${start}–${end} 课</strong><span>共 ${end - start + 1} 课</span></div>
       <div class="lesson-list">${cards}</div>
     </section>
@@ -454,11 +515,12 @@ function renderLibraryModal() {
 }
 
 function render() {
+  if (currentView === "home") return renderHome();
   document.title = `回译室 · ${lesson.title}`;
   document.body.classList.toggle("has-modal", state.settingsOpen || state.libraryOpen);
   root.innerHTML = `<div class="app-shell ${state.mode === "writing" ? "is-writing" : ""}">
     <header class="topbar">
-      <div class="brand"><span>RE:</span>WRITE</div>
+      <button class="brand brand-button" id="go-home" type="button" aria-label="返回首页"><span>RE:</span>WRITE</button>
       <div class="top-actions">
         <button class="ghost-button" id="library" type="button">课程库</button>
         <button class="ghost-button" id="view-original" type="button">查看原文</button>
@@ -483,7 +545,8 @@ function render() {
   </div>`;
 
   document.getElementById("view-original")?.addEventListener("click", openSettings);
-  document.getElementById("library")?.addEventListener("click", openLibrary);
+  document.getElementById("go-home")?.addEventListener("click", () => { currentView = "home"; state.settingsOpen = false; state.libraryOpen = false; window.scrollTo(0, 0); render(); });
+  document.getElementById("library")?.addEventListener("click", () => openLibrary());
   document.getElementById("start-writing")?.addEventListener("click", () => {
     state.startedAt = Date.now(); state.mode = "writing"; render();
     document.getElementById("draft")?.focus();
@@ -509,23 +572,34 @@ function render() {
   });
   document.getElementById("previous-lesson")?.addEventListener("click", () => switchLesson(currentIndex - 1));
   document.getElementById("next-lesson")?.addEventListener("click", () => switchLesson(currentIndex + 1));
+  attachLibraryEvents();
+  document.getElementById("close-modal")?.addEventListener("click", closeSettings);
+  document.getElementById("settings-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeSettings());
+  enableModalDragging();
+}
+
+function attachLibraryEvents() {
   document.querySelectorAll("[data-library-range]").forEach((button) => button.addEventListener("click", () => {
     state.libraryRangeIndex = Number(button.dataset.libraryRange);
     render();
     document.querySelector(`[data-library-range="${state.libraryRangeIndex}"]`)?.focus();
   }));
+  document.querySelectorAll("[data-library-book]").forEach((button) => button.addEventListener("click", () => {
+    state.libraryBook = Number(button.dataset.libraryBook);
+    state.libraryRangeIndex = 0;
+    render();
+    document.querySelector(`[data-library-book="${state.libraryBook}"]`)?.focus();
+  }));
   document.querySelectorAll("[data-lesson-index]").forEach((button) => button.addEventListener("click", () => switchLesson(Number(button.dataset.lessonIndex))));
-  document.getElementById("close-modal")?.addEventListener("click", closeSettings);
-  document.getElementById("settings-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeSettings());
-  enableModalDragging();
   document.getElementById("close-library")?.addEventListener("click", closeLibrary);
   document.getElementById("library-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeLibrary());
 }
 
 function openSettings() { state.settingsOpen = true; render(); document.getElementById("close-modal")?.focus(); }
 function closeSettings() { state.settingsOpen = false; render(); }
-function openLibrary() {
-  state.libraryRangeIndex = libraryRanges.findIndex(([start, end]) => lesson.number >= start && lesson.number <= end);
+function openLibrary(book = bookNumber(lesson)) {
+  state.libraryBook = book;
+  state.libraryRangeIndex = currentView === "home" ? 0 : rangesForBook(book).findIndex(([start, end]) => lesson.number >= start && lesson.number <= end);
   state.libraryOpen = true;
   render();
   document.getElementById("close-library")?.focus();
