@@ -492,7 +492,8 @@ function renderLibraryModal() {
   const rangeTabs = ranges.map(([from, to], index) => `<button class="library-range" type="button" role="tab" aria-label="${from}–${to}课" aria-selected="${index === state.libraryRangeIndex}" data-library-range="${index}">
     <strong>${from}–${to}</strong><small>LESSONS</small>
   </button>`).join("");
-  const cards = lessons.map((item, index) => ({ item, index })).filter(({ item }) => bookNumber(item) === book && item.number >= start && item.number <= end).map(({ item, index }) => {
+  const rangeLessons = lessons.map((item, index) => ({ item, index })).filter(({ item }) => bookNumber(item) === book && item.number >= start && item.number <= end);
+  const cards = rangeLessons.map(({ item, index }) => {
     const completed = localStorage.getItem(lessonKeys(item).completed) === "true";
     return `<button class="lesson-card ${index === currentIndex ? "active" : ""}" type="button" data-lesson-index="${index}">
       <span class="lesson-card-number">${String(item.number).padStart(2, "0")}</span>
@@ -508,7 +509,7 @@ function renderLibraryModal() {
       <p>每一课分别保存练习记录。本册已录入 ${bookLessons(book).length} 课。</p>
       <div class="library-books" role="tablist" aria-label="教材册数">${bookTabs}</div>
       ${ranges.length > 1 ? `<div class="library-ranges" role="tablist" aria-label="课程范围">${rangeTabs}</div>` : ""}
-      <div class="library-range-summary"><strong>第 ${start}–${end} 课</strong><span>共 ${end - start + 1} 课</span></div>
+      <div class="library-range-summary"><strong>第 ${start}–${end} 课</strong><span>已录入 ${rangeLessons.length} 课</span></div>
       <div class="lesson-list">${cards}</div>
     </section>
   </div>`;
