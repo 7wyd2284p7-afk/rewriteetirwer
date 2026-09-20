@@ -90,6 +90,7 @@ footer { border-top: 1px solid rgba(23,33,29,.15); padding: 24px 4.5vw; color: #
 .modal > p { color: #727871; font-size: 14px; }
 .modal-drag-handle { cursor: grab; touch-action: none; user-select: none; padding-right: 35px; }
 .modal-drag-handle.is-dragging { cursor: grabbing; }
+.mobile-original-heading, .mobile-bilingual-view { display: none; }
 .original-modal-copy { max-height: min(55vh, 480px, calc(100dvh - 190px)); overflow: auto; margin-top: 24px; padding: 18px; border: 1px solid #cfc9bd; background: white; white-space: pre-wrap; font: 16px/1.7 Georgia, serif; }
 .close-button { position: absolute; right: 19px; top: 19px; border: 0; background: transparent; color: #666; }
 .library-modal { width: min(940px, 100%); height: min(780px, calc(100dvh - 40px)); min-height: 0; display: flex; flex-direction: column; padding: 36px 40px 28px; }
@@ -142,6 +143,20 @@ footer { border-top: 1px solid rgba(23,33,29,.15); padding: 24px 4.5vw; color: #
   .lesson-switcher { grid-template-columns: 1fr 1fr; }
   .lesson-switcher span { display: none; }
   .modal-backdrop { padding: 10px; }
+  .original-modal { width: 100%; height: calc(100dvh - 20px); max-height: none; padding: 22px 18px 16px; display: flex; flex-direction: column; transform: none !important; }
+  .original-modal .close-button { top: 15px; right: 15px; width: 36px; height: 36px; border-radius: 50%; background: #f1eee7; font-size: 20px; }
+  .original-modal .modal-drag-handle { flex: 0 0 auto; padding-right: 44px; cursor: default; touch-action: auto; user-select: auto; }
+  .mobile-original-heading { display: block; margin-top: 7px; }
+  .mobile-original-heading strong, .mobile-original-heading span { display: block; }
+  .mobile-original-heading strong { font: 600 27px/1.2 Georgia, serif; }
+  .mobile-original-heading span { margin-top: 4px; color: #7b817c; font-size: 13px; }
+  .original-modal-copy { display: none; }
+  .mobile-bilingual-view { min-height: 0; flex: 1; display: grid; grid-template-rows: 1fr 1fr; gap: 1px; margin-top: 17px; overflow: hidden; border: 1px solid #d8d3c8; background: #d8d3c8; }
+  .bilingual-pane { min-height: 0; overflow-y: auto; background: white; padding: 14px 17px 22px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .bilingual-pane-label { position: sticky; top: -14px; z-index: 1; margin: -14px -17px 14px; padding: 12px 17px 9px; border-bottom: 1px solid #eeeae2; background: rgba(255,255,255,.96); color: var(--coral); font-size: 10px; font-weight: 800; letter-spacing: .15em; }
+  .bilingual-pane > div:last-child { white-space: pre-wrap; }
+  .bilingual-original > div:last-child { font: 17px/1.75 Georgia, "Times New Roman", serif; }
+  .bilingual-translation > div:last-child { color: #46514b; font: 16px/2 "Songti SC", SimSun, serif; }
   .library-modal { height: calc(100dvh - 20px); padding: 24px 18px; }
   .library-modal h2 { font-size: 30px; }
   .library-books { gap: 7px; }

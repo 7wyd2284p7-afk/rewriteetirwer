@@ -440,8 +440,19 @@ function renderSettingsModal() {
       <button class="close-button" id="close-modal" type="button" aria-label="关闭">×</button>
       <div class="modal-drag-handle" id="original-drag-handle">
         <div class="eyebrow">LESSON ${String(lesson.number).padStart(2, "0")}</div>
+        <div class="mobile-original-heading"><strong>${escapeHTML(lesson.title)}</strong><span>${escapeHTML(lesson.titleCn)}</span></div>
       </div>
       <div class="original-modal-copy">${state.original ? escapeHTML(state.original) : "暂无英文原文。"}</div>
+      <div class="mobile-bilingual-view">
+        <section class="bilingual-pane bilingual-original" aria-label="英文原文">
+          <div class="bilingual-pane-label">ENGLISH · 原文</div>
+          <div>${state.original ? escapeHTML(state.original) : "暂无英文原文。"}</div>
+        </section>
+        <section class="bilingual-pane bilingual-translation" aria-label="中文翻译">
+          <div class="bilingual-pane-label">中文翻译</div>
+          <div>${escapeHTML(lesson.chinese)}</div>
+        </section>
+      </div>
     </section>
   </div>`;
 }
@@ -450,6 +461,7 @@ function enableModalDragging() {
   const modal = document.getElementById("original-modal");
   const handle = document.getElementById("original-drag-handle");
   if (!modal || !handle) return;
+  if (window.matchMedia("(max-width: 680px)").matches) return;
   handle.addEventListener("pointerdown", (event) => {
     if (event.button !== 0) return;
     event.preventDefault();
