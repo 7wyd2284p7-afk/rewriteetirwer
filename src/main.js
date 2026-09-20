@@ -31,6 +31,7 @@ function readLessonState() {
     original: savedOriginal === null ? lesson.original || "" : savedOriginal,
     duration: Number(localStorage.getItem(keys.duration) || 0),
     startedAt: null,
+    settingsOpen: false,
     libraryOpen: false,
     libraryBook: bookNumber(lesson),
     libraryRangeIndex: rangesForBook(bookNumber(lesson)).findIndex(([start, end]) => lesson.number >= start && lesson.number <= end),
@@ -434,6 +435,54 @@ function renderLessonSwitcher() {
   </nav>`;
 }
 
+function renderSettingsModal() {
+  if (!state.settingsOpen) return "";
+  return `<div class="modal-backdrop" id="settings-backdrop">
+    <section class="modal original-modal" id="original-modal" role="dialog" aria-modal="true" aria-label="英文原文">
+      <button class="close-button" id="close-modal" type="button" aria-label="关闭">×</button>
+      <div class="modal-drag-handle" id="original-drag-handle">
+        <div class="eyebrow">LESSON ${String(lesson.number).padStart(2, "0")}</div>
+      </div>
+      <div class="original-modal-copy">${state.original ? escapeHTML(state.original) : "暂无英文原文。"}</div>
+    </section>
+  </div>`;
+}
+
+function enableModalDragging() {
+  const modal = document.getElementById("original-modal");
+  const handle = document.getElementById("original-drag-handle");
+  if (!modal || !handle) return;
+  handle.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const initialX = Number(modal.dataset.offsetX || 0);
+    const initialY = Number(modal.dataset.offsetY || 0);
+    const rect = modal.getBoundingClientRect();
+    handle.setPointerCapture(event.pointerId);
+    handle.classList.add("is-dragging");
+    const move = (moveEvent) => {
+      const maxLeft = window.innerWidth - rect.width;
+      const maxTop = window.innerHeight - rect.height;
+      const x = Math.min(Math.max(initialX + moveEvent.clientX - startX, initialX - rect.left), initialX + maxLeft - rect.left);
+      const y = Math.min(Math.max(initialY + moveEvent.clientY - startY, initialY - rect.top), initialY + maxTop - rect.top);
+      modal.dataset.offsetX = String(x);
+      modal.dataset.offsetY = String(y);
+      modal.style.transform = `translate(${x}px, ${y}px)`;
+    };
+    const stop = () => {
+      handle.classList.remove("is-dragging");
+      handle.removeEventListener("pointermove", move);
+      handle.removeEventListener("pointerup", stop);
+      handle.removeEventListener("pointercancel", stop);
+    };
+    handle.addEventListener("pointermove", move);
+    handle.addEventListener("pointerup", stop);
+    handle.addEventListener("pointercancel", stop);
+  });
+}
+
 function renderLibraryModal() {
   if (!state.libraryOpen) return "";
   const book = state.libraryBook;
@@ -469,12 +518,13 @@ function renderLibraryModal() {
 function render() {
   if (currentView === "home") return renderHome();
   document.title = `回译室 · ${lesson.title}`;
-  document.body.classList.toggle("has-modal", state.libraryOpen);
+  document.body.classList.toggle("has-modal", state.settingsOpen || state.libraryOpen);
   root.innerHTML = `<div class="app-shell ${state.mode === "writing" ? "is-writing" : ""}">
     <header class="topbar">
       <button class="brand brand-button" id="go-home" type="button" aria-label="返回首页"><span>RE:</span>WRITE</button>
       <div class="top-actions">
         <button class="ghost-button" id="library" type="button">课程库</button>
+        <button class="ghost-button" id="view-original" type="button">原文</button>
       </div>
     </header>
     <main class="lesson-page">
@@ -491,10 +541,12 @@ function render() {
       ${renderLessonSwitcher()}
     </main>
     <footer><span>NEW CONCEPT ENGLISH · RETRANSLATION PRACTICE</span><span>本地自动保存</span></footer>
+    ${renderSettingsModal()}
     ${renderLibraryModal()}
   </div>`;
 
-  document.getElementById("go-home")?.addEventListener("click", () => { currentView = "home"; state.libraryOpen = false; window.scrollTo(0, 0); render(); });
+  document.getElementById("view-original")?.addEventListener("click", openSettings);
+  document.getElementById("go-home")?.addEventListener("click", () => { currentView = "home"; state.settingsOpen = false; state.libraryOpen = false; window.scrollTo(0, 0); render(); });
   document.getElementById("library")?.addEventListener("click", () => openLibrary());
   document.getElementById("start-writing")?.addEventListener("click", () => {
     state.startedAt = Date.now(); state.mode = "writing"; render();
@@ -522,6 +574,9 @@ function render() {
   document.getElementById("previous-lesson")?.addEventListener("click", () => switchLesson(currentIndex - 1));
   document.getElementById("next-lesson")?.addEventListener("click", () => switchLesson(currentIndex + 1));
   attachLibraryEvents();
+  document.getElementById("close-modal")?.addEventListener("click", closeSettings);
+  document.getElementById("settings-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeSettings());
+  enableModalDragging();
 }
 
 function attachLibraryEvents() {
@@ -541,6 +596,8 @@ function attachLibraryEvents() {
   document.getElementById("library-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeLibrary());
 }
 
+function openSettings() { state.settingsOpen = true; render(); document.getElementById("close-modal")?.focus(); }
+function closeSettings() { state.settingsOpen = false; render(); }
 function openLibrary(book = bookNumber(lesson)) {
   state.libraryBook = book;
   state.libraryRangeIndex = currentView === "home" ? 0 : rangesForBook(book).findIndex(([start, end]) => lesson.number >= start && lesson.number <= end);
