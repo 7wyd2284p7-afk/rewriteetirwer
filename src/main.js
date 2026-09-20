@@ -16,7 +16,6 @@ let homeBook = libraryBooks[0];
 function lessonKeys(item) {
   const prefix = `retranslate.lesson${bookNumber(item)}.${item.number}`;
   return {
-    original: `${prefix}.original`,
     draft: `${prefix}.draft`,
     completed: `${prefix}.completed`,
     duration: `${prefix}.duration`,
@@ -24,11 +23,10 @@ function lessonKeys(item) {
 }
 
 function readLessonState() {
-  const savedOriginal = localStorage.getItem(keys.original);
   return {
     mode: localStorage.getItem(keys.completed) === "true" ? "complete" : "ready",
     draft: localStorage.getItem(keys.draft) || "",
-    original: savedOriginal === null ? lesson.original || "" : savedOriginal,
+    original: lesson.original || "",
     duration: Number(localStorage.getItem(keys.duration) || 0),
     startedAt: null,
     settingsOpen: false,
