@@ -7,14 +7,40 @@ function rangesForBook(book) {
   const last = Math.max(...bookLessons(book).map((item) => item.number));
   return Array.from({ length: Math.ceil(last / 20) }, (_, index) => [index * 20 + 1, Math.min((index + 1) * 20, last)]);
 }
-let currentIndex = Math.min(Math.max(Number(localStorage.getItem(currentLessonKey) || 0), 0), lessons.length - 1);
+
+function routeFromLocation() {
+  const lessonMatch = location.hash.match(/^#\/book\/(\d+)\/lesson\/(\d+)$/);
+  if (lessonMatch) {
+    const book = Number(lessonMatch[1]);
+    const number = Number(lessonMatch[2]);
+    const index = lessons.findIndex((item) => bookNumber(item) === book && item.number === number);
+    if (index >= 0) return { view: "lesson", book, number, index };
+  }
+  const bookMatch = location.hash.match(/^#\/book\/(\d+)$/) || location.hash.match(/^#book-(\d+)$/);
+  const book = Number(bookMatch?.[1]);
+  if (libraryBooks.includes(book)) return { view: "book-detail", book };
+  return { view: "home" };
+}
+
+function bookRoute(book) {
+  return `#/book/${book}`;
+}
+
+function lessonRoute(item) {
+  return `#/book/${bookNumber(item)}/lesson/${item.number}`;
+}
+
+const initialRoute = routeFromLocation();
+const savedLessonIndex = Math.min(Math.max(Number(localStorage.getItem(currentLessonKey) || 0), 0), lessons.length - 1);
+let currentIndex = initialRoute.view === "lesson" ? initialRoute.index : savedLessonIndex;
 let lesson = lessons[currentIndex];
 let keys = lessonKeys(lesson);
-let homeBook = libraryBooks[0];
-const initialDetailBook = Number(location.hash.match(/^#book-(\d+)$/)?.[1]);
-let currentView = libraryBooks.includes(initialDetailBook) ? "book-detail" : "home";
-let detailBook = libraryBooks.includes(initialDetailBook) ? initialDetailBook : homeBook;
+let homeBook = initialRoute.book || libraryBooks[0];
+let currentView = initialRoute.view;
+let detailBook = initialRoute.view === "book-detail" ? initialRoute.book : homeBook;
 let detailRangeIndex = 0;
+let settingsReturnFocusId = null;
+let libraryReturnFocusId = null;
 
 function lessonKeys(item) {
   const prefix = `retranslate.lesson${bookNumber(item)}.${item.number}`;
@@ -332,13 +358,13 @@ function compareTexts(userText, originalText) {
   };
 }
 
-function switchLesson(index) {
+function switchLesson(index, updateHistory = true) {
   if (index < 0 || index >= lessons.length) return;
   currentIndex = index;
   lesson = lessons[currentIndex];
   keys = lessonKeys(lesson);
   currentView = "lesson";
-  if (location.hash) history.pushState({ view: "lesson" }, "", `${location.pathname}${location.search}`);
+  if (updateHistory) history.pushState({ view: "lesson", book: bookNumber(lesson), lesson: lesson.number }, "", lessonRoute(lesson));
   localStorage.setItem(currentLessonKey, String(currentIndex));
   Object.assign(state, readLessonState());
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -365,7 +391,7 @@ function openBookDetail(book, updateHistory = true) {
   currentView = "book-detail";
   state.libraryOpen = false;
   state.settingsOpen = false;
-  if (updateHistory) history.pushState({ view: "book-detail", book }, "", `#book-${book}`);
+  if (updateHistory) history.pushState({ view: "book-detail", book }, "", bookRoute(book));
   window.scrollTo({ top: 0, behavior: "smooth" });
   render();
 }
@@ -458,7 +484,7 @@ function renderHome() {
   </button>`).join("");
   document.title = "回译室 · 首页";
   document.body.classList.toggle("has-modal", state.libraryOpen);
-  root.innerHTML = `<div class="home-shell"><div class="home-wrap">
+  root.innerHTML = `<div class="home-shell"><div class="home-wrap" ${state.libraryOpen ? "inert" : ""}>
     <header class="home-header"><div class="home-brand">RE:WRITE <span>回译室</span></div><button class="home-header-link" id="home-library" type="button">课程库 ↗</button></header>
     <main>
       <section class="home-hero" aria-labelledby="home-title">
@@ -542,13 +568,13 @@ function renderSettingsModal() {
         <div class="eyebrow">LESSON ${String(lesson.number).padStart(2, "0")}</div>
         <div class="mobile-original-heading"><strong>${escapeHTML(lesson.title)}</strong><span>${escapeHTML(lesson.titleCn)}</span></div>
       </div>
-      <div class="original-modal-copy">${state.original ? escapeHTML(state.original) : "暂无英文原文。"}</div>
+      <div class="original-modal-copy" tabindex="0">${state.original ? escapeHTML(state.original) : "暂无英文原文。"}</div>
       <div class="mobile-bilingual-view">
-        <section class="bilingual-pane bilingual-original" aria-label="英文原文">
+        <section class="bilingual-pane bilingual-original" aria-label="英文原文" tabindex="0">
           <div class="bilingual-pane-label">ENGLISH · 原文</div>
           <div>${state.original ? escapeHTML(state.original) : "暂无英文原文。"}</div>
         </section>
-        <section class="bilingual-pane bilingual-translation" aria-label="中文翻译">
+        <section class="bilingual-pane bilingual-translation" aria-label="中文翻译" tabindex="0">
           <div class="bilingual-pane-label">中文翻译</div>
           <div>${escapeHTML(lesson.chinese)}</div>
         </section>
@@ -629,16 +655,17 @@ function render() {
   if (currentView === "home") return renderHome();
   if (currentView === "book-detail") return renderBookDetail();
   document.title = `回译室 · ${lesson.title}`;
-  document.body.classList.toggle("has-modal", state.settingsOpen || state.libraryOpen);
+  const modalOpen = state.settingsOpen || state.libraryOpen;
+  document.body.classList.toggle("has-modal", modalOpen);
   root.innerHTML = `<div class="app-shell ${state.mode === "writing" ? "is-writing" : ""}">
-    <header class="topbar">
+    <header class="topbar" ${modalOpen ? "inert" : ""}>
       <button class="brand brand-button" id="go-home" type="button" aria-label="返回首页"><span>RE:</span>WRITE</button>
       <div class="top-actions">
         <button class="ghost-button" id="library" type="button">课程库</button>
         <button class="ghost-button" id="view-original" type="button">原文</button>
       </div>
     </header>
-    <main class="lesson-page">
+    <main class="lesson-page" ${modalOpen ? "inert" : ""}>
       <nav class="breadcrumb" aria-label="当前位置"><button class="breadcrumb-home" id="breadcrumb-home" type="button">‹ ${escapeHTML(lesson.book)}</button><span>/</span> Lesson ${lesson.number}</nav>
       <section class="lesson-heading">
         <div><div class="eyebrow">LESSON ${String(lesson.number).padStart(2, "0")}</div><h1>${escapeHTML(lesson.title)}</h1><p>${escapeHTML(lesson.titleCn)}</p></div>
@@ -651,7 +678,7 @@ function render() {
       ${renderWritingArea()}
       ${renderLessonSwitcher()}
     </main>
-    <footer><span>NEW CONCEPT ENGLISH · RETRANSLATION PRACTICE</span><span>本地自动保存</span></footer>
+    <footer ${modalOpen ? "inert" : ""}><span>NEW CONCEPT ENGLISH · RETRANSLATION PRACTICE</span><span>本地自动保存</span></footer>
     ${renderSettingsModal()}
     ${renderLibraryModal()}
   </div>`;
@@ -708,30 +735,102 @@ function attachLibraryEvents() {
   document.getElementById("library-backdrop")?.addEventListener("mousedown", (event) => event.target === event.currentTarget && closeLibrary());
 }
 
-function openSettings() { state.settingsOpen = true; render(); document.getElementById("close-modal")?.focus(); }
-function closeSettings() { state.settingsOpen = false; render(); }
+function restoreModalFocus(id) {
+  if (id) document.getElementById(id)?.focus();
+}
+
+function openSettings() {
+  settingsReturnFocusId = document.activeElement?.id || "view-original";
+  state.settingsOpen = true;
+  render();
+  document.getElementById("close-modal")?.focus();
+}
+
+function closeSettings() {
+  const returnFocusId = settingsReturnFocusId;
+  settingsReturnFocusId = null;
+  state.settingsOpen = false;
+  render();
+  restoreModalFocus(returnFocusId);
+}
+
 function openLibrary(book = bookNumber(lesson)) {
+  libraryReturnFocusId = document.activeElement?.id || (currentView === "home" ? "home-library" : "library");
   state.libraryBook = book;
   state.libraryRangeIndex = currentView === "home" ? 0 : rangesForBook(book).findIndex(([start, end]) => lesson.number >= start && lesson.number <= end);
   state.libraryOpen = true;
   render();
   document.getElementById("close-library")?.focus();
 }
-function closeLibrary() { state.libraryOpen = false; render(); }
+
+function closeLibrary() {
+  const returnFocusId = libraryReturnFocusId;
+  libraryReturnFocusId = null;
+  state.libraryOpen = false;
+  render();
+  restoreModalFocus(returnFocusId);
+}
+
+function trapModalFocus(event) {
+  if (event.key !== "Tab") return;
+  const dialog = document.querySelector(".modal-backdrop [role='dialog']");
+  if (!dialog) return;
+  const focusable = [...dialog.querySelectorAll("button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])")]
+    .filter((element) => element.getAttribute("aria-hidden") !== "true" && element.getClientRects().length > 0);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable.at(-1);
+  if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    if (state.settingsOpen) {
+      event.preventDefault();
+      closeSettings();
+    } else if (state.libraryOpen) {
+      event.preventDefault();
+      closeLibrary();
+    }
+    return;
+  }
+  if (state.settingsOpen || state.libraryOpen) trapModalFocus(event);
+});
 
 window.addEventListener("popstate", () => {
-  const hashBook = Number(location.hash.match(/^#book-(\d+)$/)?.[1]);
-  if (libraryBooks.includes(hashBook)) {
-    detailBook = hashBook;
+  const route = routeFromLocation();
+  if (route.view === "lesson") {
+    currentIndex = route.index;
+    lesson = lessons[currentIndex];
+    keys = lessonKeys(lesson);
+    homeBook = route.book;
+    currentView = "lesson";
+    localStorage.setItem(currentLessonKey, String(currentIndex));
+    Object.assign(state, readLessonState());
+  } else if (route.view === "book-detail") {
+    detailBook = route.book;
+    homeBook = route.book;
     detailRangeIndex = 0;
     currentView = "book-detail";
   } else {
     currentView = "home";
+    state.libraryOpen = false;
+    state.settingsOpen = false;
   }
+  settingsReturnFocusId = null;
+  libraryReturnFocusId = null;
   state.libraryOpen = false;
   state.settingsOpen = false;
   window.scrollTo(0, 0);
   render();
 });
 
+if (initialRoute.view === "lesson") localStorage.setItem(currentLessonKey, String(currentIndex));
+if (location.hash.match(/^#book-(\d+)$/)) history.replaceState({ view: "book-detail", book: detailBook }, "", bookRoute(detailBook));
 render();
