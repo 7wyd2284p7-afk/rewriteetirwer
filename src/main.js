@@ -10,8 +10,11 @@ function rangesForBook(book) {
 let currentIndex = Math.min(Math.max(Number(localStorage.getItem(currentLessonKey) || 0), 0), lessons.length - 1);
 let lesson = lessons[currentIndex];
 let keys = lessonKeys(lesson);
-let currentView = "home";
 let homeBook = libraryBooks[0];
+const initialDetailBook = Number(location.hash.match(/^#book-(\d+)$/)?.[1]);
+let currentView = libraryBooks.includes(initialDetailBook) ? "book-detail" : "home";
+let detailBook = libraryBooks.includes(initialDetailBook) ? initialDetailBook : homeBook;
+let detailRangeIndex = 0;
 
 function lessonKeys(item) {
   const prefix = `retranslate.lesson${bookNumber(item)}.${item.number}`;
@@ -335,10 +338,111 @@ function switchLesson(index) {
   lesson = lessons[currentIndex];
   keys = lessonKeys(lesson);
   currentView = "lesson";
+  if (location.hash) history.pushState({ view: "lesson" }, "", `${location.pathname}${location.search}`);
   localStorage.setItem(currentLessonKey, String(currentIndex));
   Object.assign(state, readLessonState());
   window.scrollTo({ top: 0, behavior: "smooth" });
   render();
+}
+
+function bookLabel(book) {
+  return book === 2 ? "二" : book === 3 ? "三" : String(book);
+}
+
+function currentLessonForBook(book) {
+  const items = bookLessons(book);
+  const current = items.find((item) => lessons.indexOf(item) === currentIndex);
+  if (current) return current;
+  const completed = items.filter((item) => localStorage.getItem(lessonKeys(item).completed) === "true");
+  return completed.at(-1) || items[0];
+}
+
+function openBookDetail(book, updateHistory = true) {
+  if (!libraryBooks.includes(book)) return;
+  detailBook = book;
+  homeBook = book;
+  detailRangeIndex = 0;
+  currentView = "book-detail";
+  state.libraryOpen = false;
+  state.settingsOpen = false;
+  if (updateHistory) history.pushState({ view: "book-detail", book }, "", `#book-${book}`);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  render();
+}
+
+function returnHome(updateHistory = true) {
+  currentView = "home";
+  state.libraryOpen = false;
+  state.settingsOpen = false;
+  if (updateHistory) history.pushState({ view: "home" }, "", `${location.pathname}${location.search}`);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  render();
+}
+
+function renderBookDetail() {
+  const book = detailBook;
+  const items = bookLessons(book);
+  const current = currentLessonForBook(book);
+  const ranges = rangesForBook(book);
+  detailRangeIndex = Math.min(detailRangeIndex, ranges.length - 1);
+  const [start, end] = ranges[detailRangeIndex];
+  const rangeItems = items.filter((item) => item.number >= start && item.number <= end);
+  const descriptions = {
+    2: "从日常场景到完整叙事，通过 96 篇经典课文积累常用句型。选择课程区间，可以更快找到想练习的课目。",
+    3: "用更长的文章训练阅读、复述和英文表达。课程详情页按区间展示全部课目，查找和继续学习都会更直接。",
+  };
+  const englishTitles = { 2: "Practice &amp; Progress", 3: "Developing Skills" };
+  const rangeButtons = ranges.map(([from, to], index) => `<button class="book-detail-range ${index === detailRangeIndex ? "active" : ""}" type="button" data-detail-range="${index}" aria-pressed="${index === detailRangeIndex}">
+    <strong>${String(from).padStart(2, "0")}—${String(to).padStart(2, "0")}</strong><small>${to - from + 1} LESSONS</small>
+  </button>`).join("");
+  const lessonRows = rangeItems.map((item) => {
+    const index = lessons.indexOf(item);
+    const completed = localStorage.getItem(lessonKeys(item).completed) === "true";
+    return `<button class="book-detail-lesson" type="button" data-detail-lesson="${index}">
+      <span class="book-detail-lesson-number">LESSON ${String(item.number).padStart(2, "0")}</span>
+      <span><strong>${escapeHTML(item.title)}</strong><small>${escapeHTML(item.titleCn)}</small></span>
+      <span class="book-detail-lesson-status">${completed ? "已完成 ✓" : "进入课程 →"}</span>
+    </button>`;
+  }).join("");
+  const currentIndexInAll = lessons.indexOf(current);
+  const progress = Math.max(2, current.number / items.length * 100);
+  document.title = `回译室 · 新概念英语 第${bookLabel(book)}册`;
+  document.body.classList.remove("has-modal");
+  root.innerHTML = `<div class="book-detail-shell"><div class="book-detail-wrap">
+    <header class="home-header"><div class="home-brand">RE:WRITE <span>回译室</span></div><button class="book-detail-home" type="button">课程库</button></header>
+    <main class="book-detail-page">
+      <button class="book-detail-back" id="book-detail-back" type="button">← BACK</button>
+      <section class="book-detail-hero">
+        <div class="book-detail-main" data-number="${String(book).padStart(2, "0")}">
+          <div class="book-detail-kicker">NEW CONCEPT ENGLISH · BOOK ${String(book).padStart(2, "0")}</div>
+          <h1>新概念英语 第${bookLabel(book)}册</h1>
+          <div class="book-detail-english">${englishTitles[book] || "New Concept English"}</div>
+          <p>${descriptions[book] || "按课程区间浏览全部课目，选择想要练习的课程。"}</p>
+        </div>
+        <aside class="book-detail-side">
+          <div><div class="book-detail-progress-label">YOUR PROGRESS / 学习进度</div>
+            <div class="book-detail-progress"><strong>${current.number}</strong><span>/ ${items.length} 课</span></div>
+            <div class="book-detail-track"><i style="width:${progress}%"></i></div>
+          </div>
+          <button class="book-detail-continue" type="button" data-detail-lesson="${currentIndexInAll}"><span>继续 Lesson ${String(current.number).padStart(2, "0")}</span><span>→</span></button>
+        </aside>
+      </section>
+      <section class="book-detail-catalogue">
+        <div class="book-detail-catalogue-head"><div><div class="book-detail-kicker">COURSE CATALOGUE / 课程目录</div><h2>选择课程</h2></div><p>先选区间，再进入具体课目</p></div>
+        <div class="book-detail-ranges">${rangeButtons}</div>
+        <div class="book-detail-lessons">${lessonRows}</div>
+      </section>
+    </main>
+    <footer class="home-footer"><span>RE:WRITE · 回译室</span><span>NEW CONCEPT ENGLISH · RETRANSLATION PRACTICE</span></footer>
+  </div></div>`;
+  document.getElementById("book-detail-back").addEventListener("click", () => returnHome());
+  document.querySelector(".book-detail-home").addEventListener("click", () => returnHome());
+  document.querySelectorAll("[data-detail-range]").forEach((button) => button.addEventListener("click", () => {
+    detailRangeIndex = Number(button.dataset.detailRange);
+    renderBookDetail();
+    document.querySelector(`[data-detail-range="${detailRangeIndex}"]`)?.focus();
+  }));
+  document.querySelectorAll("[data-detail-lesson]").forEach((button) => button.addEventListener("click", () => switchLesson(Number(button.dataset.detailLesson))));
 }
 
 function renderHome() {
@@ -375,14 +479,10 @@ function renderHome() {
     </main><footer class="home-footer"><span>RE:WRITE · 回译室</span><span>NEW CONCEPT ENGLISH · RETRANSLATION PRACTICE</span></footer>
   </div>${renderLibraryModal()}</div>`;
   document.getElementById("home-continue").addEventListener("click", () => switchLesson(savedIndex === null ? 0 : currentIndex));
-  document.querySelectorAll("[data-home-book]").forEach((button) => button.addEventListener("click", () => {
-    homeBook = Number(button.dataset.homeBook);
-    render();
-    document.querySelector(`[data-home-book="${homeBook}"]`)?.focus();
-  }));
+  document.querySelectorAll("[data-home-book]").forEach((button) => button.addEventListener("click", () => openBookDetail(Number(button.dataset.homeBook))));
   document.querySelectorAll("[data-home-lesson]").forEach((button) => button.addEventListener("click", () => switchLesson(Number(button.dataset.homeLesson))));
   document.getElementById("home-library").addEventListener("click", () => openLibrary(homeBook));
-  document.getElementById("home-all-lessons").addEventListener("click", () => openLibrary(homeBook));
+  document.getElementById("home-all-lessons").addEventListener("click", () => openBookDetail(homeBook));
   attachLibraryEvents();
 }
 
@@ -527,6 +627,7 @@ function renderLibraryModal() {
 
 function render() {
   if (currentView === "home") return renderHome();
+  if (currentView === "book-detail") return renderBookDetail();
   document.title = `回译室 · ${lesson.title}`;
   document.body.classList.toggle("has-modal", state.settingsOpen || state.libraryOpen);
   root.innerHTML = `<div class="app-shell ${state.mode === "writing" ? "is-writing" : ""}">
@@ -616,5 +717,20 @@ function openLibrary(book = bookNumber(lesson)) {
   document.getElementById("close-library")?.focus();
 }
 function closeLibrary() { state.libraryOpen = false; render(); }
+
+window.addEventListener("popstate", () => {
+  const hashBook = Number(location.hash.match(/^#book-(\d+)$/)?.[1]);
+  if (libraryBooks.includes(hashBook)) {
+    detailBook = hashBook;
+    detailRangeIndex = 0;
+    currentView = "book-detail";
+  } else {
+    currentView = "home";
+  }
+  state.libraryOpen = false;
+  state.settingsOpen = false;
+  window.scrollTo(0, 0);
+  render();
+});
 
 render();
