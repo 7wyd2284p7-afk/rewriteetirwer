@@ -31,6 +31,9 @@ button { cursor: pointer; touch-action: manipulation; }
 .lesson-page { width: min(920px, calc(100% - 40px)); margin: 0 auto; padding: 42px 0 110px; }
 .breadcrumb { display: flex; align-items: center; gap: 6px; color: #6e746f; font-size: 13px; margin-bottom: 48px; }
 .breadcrumb span { color: #aaa99f; margin: 0 3px; }
+.breadcrumb-home { border: 0; padding: 5px 0; background: transparent; color: inherit; }
+.breadcrumb-home:hover { color: var(--forest); text-decoration: underline; text-underline-offset: 3px; }
+.breadcrumb-home:focus-visible { outline: 2px solid var(--coral); outline-offset: 4px; }
 .lesson-heading { display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 1px solid var(--ink); padding-bottom: 25px; margin-bottom: 30px; }
 .eyebrow { color: var(--coral); font-size: 11px; font-weight: 700; letter-spacing: .18em; margin-bottom: 9px; }
 h1 { font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(35px, 6vw, 60px); line-height: 1; letter-spacing: -.045em; margin: 0; font-weight: 600; }

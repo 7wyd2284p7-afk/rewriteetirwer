@@ -639,7 +639,7 @@ function render() {
       </div>
     </header>
     <main class="lesson-page">
-      <nav class="breadcrumb" aria-label="当前位置">‹ ${lesson.book} <span>/</span> Lesson ${lesson.number}</nav>
+      <nav class="breadcrumb" aria-label="当前位置"><button class="breadcrumb-home" id="breadcrumb-home" type="button">‹ ${escapeHTML(lesson.book)}</button><span>/</span> Lesson ${lesson.number}</nav>
       <section class="lesson-heading">
         <div><div class="eyebrow">LESSON ${String(lesson.number).padStart(2, "0")}</div><h1>${escapeHTML(lesson.title)}</h1><p>${escapeHTML(lesson.titleCn)}</p></div>
         <div class="lesson-progress"><strong>${String(lesson.number).padStart(2, "0")}</strong><span>/ ${lesson.total}</span></div>
@@ -657,7 +657,8 @@ function render() {
   </div>`;
 
   document.getElementById("view-original")?.addEventListener("click", openSettings);
-  document.getElementById("go-home")?.addEventListener("click", () => { currentView = "home"; state.settingsOpen = false; state.libraryOpen = false; window.scrollTo(0, 0); render(); });
+  document.getElementById("go-home")?.addEventListener("click", () => returnHome());
+  document.getElementById("breadcrumb-home")?.addEventListener("click", () => returnHome());
   document.getElementById("library")?.addEventListener("click", () => openLibrary());
   document.getElementById("start-writing")?.addEventListener("click", () => {
     state.startedAt = Date.now(); state.mode = "writing"; render();
